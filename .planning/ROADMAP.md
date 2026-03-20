@@ -49,6 +49,13 @@ This roadmap delivers the foundational cannabis employee performance tracking sy
 - Authentication system with role-based access control
 - Basic database schema for users and roles
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project foundation with Next.js, PostgreSQL, and mobile-first setup
+- [ ] 01-02-PLAN.md — NextAuth.js authentication system with database sessions
+- [ ] 01-03-PLAN.md — Role-based access control, mobile navigation, and test suite
+
 ### Phase 2: Data Management Core
 **Goal**: Enable managers to create batches, daily entries, and input employee weight data with efficient search functionality.
 
