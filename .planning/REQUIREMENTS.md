@@ -65,7 +65,30 @@ Cannabis industry compliance requirements:
 
 ## Traceability
 
-*This section will be populated during roadmap creation to map requirements to phases*
+### Phase 1: Secure Foundation
+- AUTH-01: User can create account with email/password
+- AUTH-02: User can log in and stay logged in across sessions
+- AUTH-03: User can log out from any page
+- AUTH-04: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
+- UX-01: Mobile-responsive design optimized for phone usage
+- UX-02: Employees cannot view other employees' performance data (privacy)
+
+### Phase 2: Data Management Core  
+- DATA-01: Manager can create batches with strain specification
+- DATA-02: Manager can create daily entries within batches
+- DATA-03: Manager can input employee weights with autocomplete search functionality
+- DATA-04: Manager can submit completed days to notify employees of new data
+- ADMIN-01: Admin can add, edit, and delete employee accounts
+
+### Phase 3: Performance Visibility
+- PERF-01: Employee can view their daily gram production with strain context
+- PERF-02: Employee can see historical performance trends (day-to-day, batch-to-batch)
+
+### Phase 4: Commission & Analytics
+- PERF-03: Employee can view projected commission earnings based on batch performance
+- ADMIN-02: Admin and Manager can view team-wide performance statistics
+
+**Coverage**: 14/14 v1 requirements mapped (100%)
 
 ---
 *Generated: 2026-03-20 from PROJECT.md active requirements and research findings*
