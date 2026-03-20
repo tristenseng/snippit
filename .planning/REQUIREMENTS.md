@@ -4,9 +4,9 @@
 
 ### Authentication & Access Control
 - [ ] **AUTH-01**: User can create account with email/password
-- [ ] **AUTH-02**: User can log in and stay logged in across sessions  
-- [ ] **AUTH-03**: User can log out from any page
-- [ ] **AUTH-04**: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
+- [x] **AUTH-02**: User can log in and stay logged in across sessions  
+- [x] **AUTH-03**: User can log out from any page
+- [x] **AUTH-04**: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
 
 ### Performance Tracking  
 - [ ] **PERF-01**: Employee can view their daily gram production with strain context
