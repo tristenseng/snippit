@@ -3,7 +3,7 @@
 ## v1 Requirements
 
 ### Authentication & Access Control
-- [ ] **AUTH-01**: User can create account with email/password
+- [x] **AUTH-01**: User can create account with email/password
 - [x] **AUTH-02**: User can log in and stay logged in across sessions  
 - [x] **AUTH-03**: User can log out from any page
 - [x] **AUTH-04**: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
@@ -24,8 +24,8 @@
 - [ ] **ADMIN-02**: Admin and Manager can view team-wide performance statistics
 
 ### User Experience
-- [ ] **UX-01**: Mobile-responsive design optimized for phone usage
-- [ ] **UX-02**: Employees cannot view other employees' performance data (privacy)
+- [x] **UX-01**: Mobile-responsive design optimized for phone usage
+- [x] **UX-02**: Employees cannot view other employees' performance data (privacy)
 
 ## v2 Requirements (Deferred)
 
