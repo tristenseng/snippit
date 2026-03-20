@@ -48,6 +48,16 @@ Employees can see their daily performance and commission progress immediately in
 - **Access Pattern**: Primarily mobile phone usage during breaks
 - **Data Source**: Manual entry replacing current paper system
 
+## Current Milestone: v1.0 Core Performance Visibility
+
+**Goal:** Establish the foundational system where employees can log in and see their daily performance data, while managers can input that data.
+
+**Target features:**
+- Employee authentication and dashboard with daily gram production viewing
+- Manager data input system for daily weights and batch management
+- Basic commission calculation and display
+- Mobile-responsive foundation
+
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
@@ -57,4 +67,4 @@ Employees can see their daily performance and commission progress immediately in
 | Projected commission display | Motivates employees during active batches | — Pending |
 
 ---
-*Last updated: 2025-03-19 after initialization*
+*Last updated: 2025-03-20 after milestone v1.0 started*
