@@ -2,12 +2,14 @@
 
 import { useSession } from "next-auth/react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Role } from "@prisma/client"
 import { getAvailableRoles } from "@/lib/rbac"
 
 export function RoleSwitcher() {
   const { data: session, update } = useSession()
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
 
   if (!session?.user || (session.user as any)?.role !== 'ADMIN') {
     return null
@@ -20,6 +22,7 @@ export function RoleSwitcher() {
   const handleRoleSwitch = async (newRole: Role) => {
     await update({ activeRole: newRole })
     setIsOpen(false)
+    router.refresh()
   }
 
   return (

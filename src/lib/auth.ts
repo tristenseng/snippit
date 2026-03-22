@@ -14,7 +14,7 @@ const loginSchema = z.object({
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
   session: {
-    strategy: "database",
+    strategy: "jwt",
     maxAge: 8 * 60 * 60,    // 8 hours for cannabis compliance
     updateAge: 60 * 60,      // Update session every hour
   },
@@ -61,11 +61,24 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
+    async jwt({ token, user, trigger, session: sessionData }) {
+      if (user) {
+        token.id = user.id
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        session.user.role = (user as any).role
+        token.role = (user as any).role
+      }
+      if (trigger === 'update' && sessionData?.activeRole) {
+        token.activeRole = sessionData.activeRole
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        session.user.role = token.role as any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(session.user as any).activeRole = token.activeRole ?? token.role
       }
       return session
     },
