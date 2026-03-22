@@ -32,13 +32,13 @@ export function RoleSwitcher() {
         aria-haspopup="listbox"
       >
         <span className="capitalize">{activeRole.toLowerCase()} view</span>
-        <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <svg className={`ml-1 h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10" role="listbox">
+        <div className="absolute right-0 bottom-full mb-2 w-48 bg-white rounded-md shadow-lg z-[60]" role="listbox">
           <div className="py-1">
             {availableRoles.map((role) => (
               <button

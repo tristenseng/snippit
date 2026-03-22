@@ -97,7 +97,7 @@ export function MobileNav() {
               </RoleGuard>
             </nav>
 
-            <div className="border-t px-4 py-4">
+            <div className="relative border-t px-4 py-4 overflow-visible">
               <RoleSwitcher />
               <div className="mt-4">
                 <LogoutButton variant="text" />
