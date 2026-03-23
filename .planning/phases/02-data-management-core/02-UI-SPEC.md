@@ -53,19 +53,18 @@ Source: Existing Tailwind usage in Phase 1 components + `minHeight.touch: 44px` 
 
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
-| Body | 14px (sm) | 400 (normal) | 1.5 |
-| Label | 14px (sm) | 500 (medium) | 1.25 |
-| Heading | 20px (xl) | 600 (semibold) | 1.2 |
-| Display | 24px (2xl) | 700 (bold) | 1.2 |
+| Body / Data / Label | 14px (sm) | 400 (normal) | 1.5 |
+| Heading / Display / CTA | 20–24px (xl–2xl) | 600 (semibold) | 1.2 |
 
 Notes:
 - Input fields use `text-base` (16px) on mobile to prevent iOS zoom on focus — existing LoginForm pattern (`text-base sm:text-sm`). All `<input>` and `<select>` elements MUST follow this pattern.
-- Table/list data rows use Body (14px/400).
-- Section headings (e.g. "Active Batch", "Employee Accounts") use Heading (20px/600).
-- Page-level titles (e.g. "Batch Management", "Admin Panel") use Display (24px/700).
-- Font weight scale is exactly 2 weights for prose: 400 (body/data) and 600 (headings, labels, CTAs). 700 is reserved for page-level display titles only.
+- Table/list data rows use Body role (14px/400).
+- Section headings (e.g. "Active Batch", "Employee Accounts") use 20px/600.
+- Page-level titles (e.g. "Batch Management", "Admin Panel") use 24px/600.
+- CTA button text uses 14–16px/600 (semibold is sufficient; 700/bold is not used in this phase).
+- The weight scale is exactly 2: 400 (body, data, labels, secondary text) and 600 (headings, display titles, CTAs).
 
-Source: Observed from globals.css (16px base), LoginForm.tsx label/input patterns, dashboard layout `text-xl font-semibold` for nav title.
+Source: Observed from globals.css (16px base), LoginForm.tsx label/input patterns, dashboard layout `text-xl font-semibold` for nav title. Weights consolidated from prior draft per checker feedback (max 2 weights).
 
 ---
 
@@ -79,7 +78,7 @@ Source: Observed from globals.css (16px base), LoginForm.tsx label/input pattern
 | Destructive | red-600 | #DC2626 | Destructive actions only |
 
 Accent (blue-600) reserved for:
-1. Primary CTA buttons — "Create Batch", "Add Day", "Save Entry", "Create Account", "Submit Day"
+1. Primary CTA buttons — "Create Batch", "Add Day", "Add Entry", "Add Employee", "Submit Day"
 2. Focus rings on all form inputs (`focus:ring-blue-500 focus:border-blue-500`)
 3. Active/selected state in autocomplete dropdown
 4. Links in breadcrumb navigation
@@ -156,9 +155,9 @@ These are the new UI components needed for this phase. No shadcn — implement a
 - `<fieldset>` with `<legend class="text-sm font-medium text-gray-700 mb-2">`
 
 **ActionButton variants**:
-- Primary: `bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md px-4 py-2 min-h-[44px]`
-- Secondary: `bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium rounded-md px-4 py-2 min-h-[44px]`
-- Destructive: `bg-red-600 hover:bg-red-700 text-white font-medium rounded-md px-4 py-2 min-h-[44px]`
+- Primary: `bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-4 py-2 min-h-[44px]`
+- Secondary: `bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-semibold rounded-md px-4 py-2 min-h-[44px]`
+- Destructive: `bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md px-4 py-2 min-h-[44px]`
 - Ghost/icon: `p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md min-h-[44px] min-w-[44px]`
 
 **InlineAlert** — non-modal contextual feedback
@@ -170,13 +169,13 @@ These are the new UI components needed for this phase. No shadcn — implement a
 
 ## Page Layout Map
 
-| Route | Primary User | Layout |
-|-------|-------------|--------|
-| `/batches` | Manager | List of batch cards; "Create Batch" CTA in page header |
-| `/batches/[id]` | Manager | Batch detail: header with status + strain list; day list below |
-| `/batches/[id]/days/[dayId]` | Manager | Day detail: strain selector + weight entry form + submitted entries list |
-| `/admin/users` | Admin | User table with search/filter; "Add Employee" CTA in page header |
-| `/admin/users/[id]/edit` | Admin | Edit form for user profile (name, role, locations) |
+| Route | Primary User | Layout | Focal Point |
+|-------|-------------|--------|-------------|
+| `/batches` | Manager | List of batch cards; "Create Batch" CTA in page header | "Create Batch" primary button in top-right of page header — the dominant call to action when the list is empty or growing |
+| `/batches/[id]` | Manager | Batch detail: header with status + strain list; day list below | The day list itself — specifically the topmost unsubmitted day row, which is where the manager's next action lives |
+| `/batches/[id]/days/[dayId]` | Manager | Day detail: strain selector + weight entry form + submitted entries list | The EmployeeAutocomplete input — it is the primary data-entry trigger for every weight recording action on this screen |
+| `/admin/users` | Admin | User table with search/filter; "Add Employee" CTA in page header | "Add Employee" primary button in top-right of page header — the dominant call to action for account provisioning |
+| `/admin/users/[id]/edit` | Admin | Edit form for user profile (name, role, locations) | The Role select field — changing role is the highest-consequence edit action on this form |
 
 All routes live inside the existing `(dashboard)` layout (`max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8`).
 
@@ -198,10 +197,10 @@ Manager data entry views (`/batches/**`) are desktop-primary — forms are full-
 - Strain must be selected before employee search is enabled
 - Grams field: numeric input, max 4 digits before decimal, 1 digit after (e.g. `999.9`), placeholder `0.0`
 - Hours field: numeric input, nullable, placeholder `—` (displayed as optional label)
-- "Add" button disabled until both employee is selected and grams > 0
+- "Add Entry" button disabled until both employee is selected and grams > 0
 - On add: row appears in submitted entries list below the form; form resets for next employee
 - Inline edit: clicking edit icon on a row puts that row's inputs back into the form (inline edit, not modal)
-- Delete: ghost icon button with single-click confirm via inline `"Remove?"` + Confirm / Cancel text links (no modal for this action)
+- Delete: ghost icon button with single-click confirm via inline `"Remove?"` + "Yes, Remove" / "Keep Entry" text links (no modal for this action)
 
 ### Batch Creation
 - Form fields: Strain(s) multi-select (from existing strain list or create new inline), Location (pre-filled from manager's location, read-only)
@@ -211,7 +210,7 @@ Manager data entry views (`/batches/**`) are desktop-primary — forms are full-
 
 ### Day Submission
 - "Submit Day" button appears on day detail view once at least one weight entry exists
-- Confirmation: inline prompt "Submit Day {N}? Employees will see this data." with "Submit" (primary) and "Cancel" (ghost) buttons — no modal
+- Confirmation: inline prompt "Submit Day {N}? Employees will see this data." with "Submit Day" (primary) and "Keep Editing" (ghost) buttons — no modal
 - After submission: day row gains green "Submitted" badge; entries remain editable (no lock per CONTEXT.md decisions)
 
 ### Admin: Account Creation
@@ -223,7 +222,7 @@ Manager data entry views (`/batches/**`) are desktop-primary — forms are full-
 ### Admin: Account Deactivation
 - "Deactivate" link in user table row actions
 - Opens DeactivateConfirmDialog: "Deactivate [Name]? Their historical data will be preserved. They will no longer be able to log in."
-- Two buttons: "Deactivate Account" (destructive red) and "Cancel" (ghost)
+- Two buttons: "Deactivate Account" (destructive red) and "Keep Account" (ghost)
 - After deactivation: row shows "Deactivated" status badge in gray; row is not removed from table
 
 ---
@@ -236,6 +235,10 @@ Manager data entry views (`/batches/**`) are desktop-primary — forms are full-
 | Primary CTA — day weight entry | "Add Entry" |
 | Primary CTA — admin user list | "Add Employee" |
 | Primary CTA — day submission | "Submit Day" |
+| Confirmation button — day submission | "Submit Day" (primary) |
+| Dismissal button — day submission confirmation | "Keep Editing" (ghost) |
+| Confirmation button — account deactivation | "Deactivate Account" (destructive) |
+| Dismissal button — account deactivation dialog | "Keep Account" (ghost) |
 | Empty state — batch list heading | "No batches yet" |
 | Empty state — batch list body | "Create your first batch to start recording daily production." |
 | Empty state — day entries heading | "No entries for Day {N}" |
@@ -247,7 +250,7 @@ Manager data entry views (`/batches/**`) are desktop-primary — forms are full-
 | Error state — employee not found | "No employees match '{query}'. Check spelling or add a new account." |
 | Destructive confirmation — submit day | "Submit Day {N}? Employees will see this data." |
 | Destructive confirmation — deactivate account | "Deactivate {Name}? Their historical data will be preserved. They will no longer be able to log in." |
-| Destructive confirmation — delete weight entry | "Remove?" |
+| Inline delete confirm — weight entry | "Remove?" + "Yes, Remove" / "Keep Entry" text links |
 | Batch status labels | INACTIVE → "Inactive", ACTIVE → "Active", COMPLETED → "Completed" |
 | Force password reset prompt | "Welcome. Please set your password to continue." |
 | Submitted day indicator | "Submitted" |
