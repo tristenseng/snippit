@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-03-25T03:41:42.874Z"
+stopped_at: Completed 02-06-PLAN.md
+last_updated: "2026-03-25T03:49:12.144Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -65,6 +65,8 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 02-data-management-core]: jest.config.ts jsx override: ts-jest configured with jsx=react-jsx inline to compile React JSX in component tests without separate tsconfig file
 - [Phase 02-data-management-core]: ActivateBatchButton extracted as separate client component to keep batch detail page a server component while enabling POST /activate mutation
 - [Phase 02-data-management-core]: Inline confirm pattern for destructive actions: Remove?/Yes,Remove/Keep Entry text links inline and Submit Day yellow banner — no modals per UI-SPEC interaction contract
+- [Phase 02-data-management-core]: EditUserForm extracted as separate 'use client' file — Next.js App Router requires client components to be in separate files from server components
+- [Phase 02-data-management-core]: DeactivateConfirmDialog uses native <button> with ref for focus management instead of ActionButton (lacks forwardRef) — preserves focus trap without modifying shared component
 
 ### Performance Metrics
 
@@ -80,8 +82,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | Phase 02-data-management-core P03 | 3min | 2 tasks | 6 files |
 | 02-data-management-core | 04 | 12min | 2 | 9 |
 | Phase 02-data-management-core P05 | 10min | 3 tasks | 17 files |
+| Phase 02-data-management-core P06 | 5min | 2 tasks | 9 files |
 
 ## Last Session
 
-**Stopped at:** Completed 02-05-PLAN.md
+**Stopped at:** Completed 02-06-PLAN.md
 **Timestamp:** 2026-03-24T07:13:00Z
