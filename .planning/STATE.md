@@ -3,28 +3,28 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-03-22T20:01:13.000Z"
+stopped_at: Phase 2 UI-SPEC approved
+last_updated: "2026-03-25T02:17:39.482Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 12
+  completed_plans: 6
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: 01 (secure-foundation) — EXECUTING
-Plan: 1 of 5
+Phase: 02 (data-management-core) — EXECUTING
+Plan: 2 of 7
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2025-03-20)
 
 **Core value:** Employees can see their daily performance and commission progress immediately instead of having to ask managers
-**Current focus:** Phase 01 — secure-foundation
+**Current focus:** Phase 02 — data-management-core
 
 ## Accumulated Context
 
@@ -33,6 +33,7 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - **01-04** (2026-03-20): PostgreSQL schema with User model (ADMIN/MANAGER/EMPLOYEE roles), NextAuth.js adapter models, and RLS privacy policies
 - **01-01** (2026-03-20): Next.js 15.2.3 App Router with Tailwind xs:320px mobile-first config, next-auth@4.24.11, Prisma@5.22.0, bcryptjs, and zod installed as cannabis compliance foundation
 - **01-02** (2026-03-20): NextAuth.js v4 credentials auth with Prisma database sessions, Zod validation, bcrypt comparison, TypeScript type augmentation for role-aware sessions
+- **02-01** (2026-03-25): Prisma schema extended with 7 Phase 2 models (Location, Strain, Batch, BatchStrain, Day, EmployeeDay, UserLocation), migrations applied, Jest infrastructure with ts-jest running 13 green stub tests
 
 ### Decisions
 
@@ -47,6 +48,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 01-secure-foundation]: Middleware at src/middleware.ts (not src/app/middleware.ts) — Next.js requires middleware at src root
 - [Phase 01-secure-foundation]: activeRole pattern for Admin context switching falls back to base role without new session tokens
 - [Phase 01-secure-foundation]: Use bottom-full mb-2 for upward-opening dropdowns in bottom-flush footer containers, z-[60] to beat MobileNav z-50 overlay, overflow-visible on footer parent
+- [Phase 02-01]: Partial unique index for one-ACTIVE-batch-per-location added via raw SQL migration — Prisma schema DSL cannot express conditional/partial unique indexes
+- [Phase 02-01]: forcePasswordReset defaults to true — new users must change password on first login
+- [Phase 02-01]: ts-node required as dev dependency for TypeScript jest.config.ts files
 
 ### Performance Metrics
 
@@ -57,8 +61,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | 01-secure-foundation | 02 | 7min | 1 | 4 |
 | Phase 01-secure-foundation P03 | 4min | 3 tasks | 11 files |
 | Phase 01-secure-foundation P05 | 1min | 1 tasks | 2 files |
+| 02-data-management-core | 01 | 4min | 2 | 12 |
 
 ## Last Session
 
-**Stopped at:** Completed 01-05-PLAN.md
-**Timestamp:** 2026-03-20T14:39:29Z
+**Stopped at:** Completed 02-01-PLAN.md
+**Timestamp:** 2026-03-25T02:22:51Z

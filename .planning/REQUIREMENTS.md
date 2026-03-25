@@ -14,13 +14,13 @@
 - [ ] **PERF-03**: Employee can view projected commission earnings based on batch performance
 
 ### Data Management
-- [ ] **DATA-01**: Manager can create batches with strain specification
-- [ ] **DATA-02**: Manager can create daily entries within batches
-- [ ] **DATA-03**: Manager can input employee weights with autocomplete search functionality
-- [ ] **DATA-04**: Manager can submit completed days to notify employees of new data
+- [x] **DATA-01**: Manager can create batches with strain specification
+- [x] **DATA-02**: Manager can create daily entries within batches
+- [x] **DATA-03**: Manager can input employee weights with autocomplete search functionality
+- [x] **DATA-04**: Manager can submit completed days to notify employees of new data
 
 ### Administrative Functions
-- [ ] **ADMIN-01**: Admin can add, edit, and delete employee accounts
+- [x] **ADMIN-01**: Admin can add, edit, and delete employee accounts
 - [ ] **ADMIN-02**: Admin and Manager can view team-wide performance statistics
 
 ### User Experience
