@@ -37,17 +37,23 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  role          Role      @default(EMPLOYEE)
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                 String        @id @default(cuid())
+  name               String?
+  email              String        @unique
+  emailVerified      DateTime?
+  password           String?
+  role               Role          @default(EMPLOYEE)
+  image              String?
+  locationId         String?
+  deactivatedAt      DateTime?
+  forcePasswordReset Boolean       @default(true)
+  accounts           Account[]
+  sessions           Session[]
+  location           Location?     @relation("UserPrimaryLocation", fields: [locationId], references: [id])
+  userLocations      UserLocation[]
+  employeeDays       EmployeeDay[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   @@map("users")
 }
@@ -58,10 +64,94 @@ enum Role {
   EMPLOYEE
 }
 
+enum BatchStatus {
+  INACTIVE
+  ACTIVE
+  COMPLETED
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Location {
+  id            String         @id @default(cuid())
+  name          String
+  users         User[]         @relation("UserPrimaryLocation")
+  batches       Batch[]
+  userLocations UserLocation[]
+}
+
+model UserLocation {
+  userId     String
+  locationId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, locationId])
+  @@map("user_locations")
+}
+
+model Strain {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  batchStrains BatchStrain[]
+}
+
+model Batch {
+  id           String        @id @default(cuid())
+  locationId   String
+  number       Int
+  status       BatchStatus   @default(INACTIVE)
+  startDate    DateTime?
+  endDate      DateTime?
+  completedAt  DateTime?
+  location     Location      @relation(fields: [locationId], references: [id])
+  batchStrains BatchStrain[]
+  days         Day[]
+
+  @@unique([locationId, number])
+}
+
+model BatchStrain {
+  id           String        @id @default(cuid())
+  batchId      String
+  strainId     String
+  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  strain       Strain        @relation(fields: [strainId], references: [id])
+  employeeDays EmployeeDay[]
+
+  @@unique([batchId, strainId])
+  @@map("batch_strains")
+}
+
+model Day {
+  id           String        @id @default(cuid())
+  batchId      String
+  batchDay     Int
+  isSubmitted  Boolean       @default(false)
+  notes        String?
+  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  employeeDays EmployeeDay[]
+
+  @@unique([batchId, batchDay])
+}
+
+model EmployeeDay {
+  id            String      @id @default(cuid())
+  employeeId    String
+  dayId         String
+  batchStrainId String
+  amount        Float
+  hours         Float?
+  employee      User        @relation(fields: [employeeId], references: [id])
+  day           Day         @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  batchStrain   BatchStrain @relation(fields: [batchStrainId], references: [id])
+
+  @@map("employees_days")
 }
