@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-25T03:22:14.046Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-24T07:13:00.000Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -17,7 +17,7 @@ progress:
 ## Current Position
 
 Phase: 02 (data-management-core) — EXECUTING
-Plan: 4 of 7
+Plan: 5 of 7
 
 ## Project Reference
 
@@ -36,6 +36,7 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - **02-01** (2026-03-25): Prisma schema extended with 7 Phase 2 models (Location, Strain, Batch, BatchStrain, Day, EmployeeDay, UserLocation), migrations applied, Jest infrastructure with ts-jest running 13 green stub tests
 - **02-02** (2026-03-25): 7 Next.js API routes for batch/day/strain management with getServerSession auth, canManageBatches RBAC, locationId scoping, Zod validation, auto-increment logic — 22 passing tests
 - **02-03** (2026-03-24): Weight entry CRUD routes with strain-batch validation and location-scoped ownership, employee search with deactivation filtering, useDebounce hook — 26 passing tests
+- **02-04** (2026-03-24): Admin user CRUD API with bcrypt hashing and canManageUsers RBAC, forcePasswordReset end-to-end flow (JWT callback, middleware redirect, set-password page) — 20 passing tests
 
 ### Decisions
 
@@ -58,6 +59,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 02-data-management-core]: Strains are global (no locationId scope) — strain catalog shared across all locations
 - [Phase 02-data-management-core]: Employee search uses session auth only (no canManageBatches) — id+name is non-sensitive data needed by managers for weight entry
 - [Phase 02-data-management-core]: Entry ownership chain: entry→day→batch→locationId validated for PATCH/DELETE to prevent cross-location access
+- [Phase 02-data-management-core]: Email not editable after account creation — Zod PATCH schema deliberately excludes email field
+- [Phase 02-data-management-core]: forcePasswordReset redirect in middleware runs BEFORE admin role check to enforce first-login priority
+- [Phase 02-data-management-core]: authorize() returns forcePasswordReset to satisfy next-auth.d.ts User type; JWT callback reads fresh from DB
 
 ### Performance Metrics
 
@@ -71,8 +75,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | 02-data-management-core | 01 | 4min | 2 | 12 |
 | Phase 02-data-management-core P02 | 7min | 2 tasks | 9 files |
 | Phase 02-data-management-core P03 | 3min | 2 tasks | 6 files |
+| 02-data-management-core | 04 | 12min | 2 | 9 |
 
 ## Last Session
 
-**Stopped at:** Completed 02-03-PLAN.md
-**Timestamp:** 2026-03-25T02:22:51Z
+**Stopped at:** Completed 02-04-PLAN.md
+**Timestamp:** 2026-03-24T07:13:00Z
