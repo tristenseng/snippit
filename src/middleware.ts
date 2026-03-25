@@ -8,6 +8,13 @@ export default withAuth(
     const token = req.nextauth.token
     const pathname = req.nextUrl.pathname
 
+    // Force password reset redirect — must happen before any other routing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const forceReset = (token as any)?.forcePasswordReset
+    if (forceReset && pathname !== '/set-password' && !pathname.startsWith('/api/auth')) {
+      return NextResponse.redirect(new URL('/set-password', req.url))
+    }
+
     // Admin-only routes: redirect non-admins to dashboard
     if (pathname.startsWith('/admin')) {
       const userRole = token?.role as Role
@@ -43,6 +50,8 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/admin/:path*",
+    "/batches/:path*",
+    "/set-password",
     "/api/protected/:path*",
   ],
 }

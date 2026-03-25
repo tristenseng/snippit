@@ -52,6 +52,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name ?? null,
             role: user.role as Role,
+            forcePasswordReset: user.forcePasswordReset,
           }
         } catch (error) {
           console.error("Auth error:", error)
@@ -66,9 +67,18 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         token.role = (user as any).role
+        // Read forcePasswordReset from DB at sign-in
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { forcePasswordReset: true },
+        })
+        token.forcePasswordReset = dbUser?.forcePasswordReset ?? false
       }
       if (trigger === 'update' && sessionData?.activeRole) {
         token.activeRole = sessionData.activeRole
+      }
+      if (trigger === 'update' && sessionData?.forcePasswordReset === false) {
+        token.forcePasswordReset = false
       }
       return token
     },
@@ -79,6 +89,8 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as any
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(session.user as any).activeRole = token.activeRole ?? token.role
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(session.user as any).forcePasswordReset = token.forcePasswordReset ?? false
       }
       return session
     },
