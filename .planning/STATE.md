@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-03-24T07:13:00.000Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-03-25T03:41:42.874Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -62,6 +62,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 02-data-management-core]: Email not editable after account creation — Zod PATCH schema deliberately excludes email field
 - [Phase 02-data-management-core]: forcePasswordReset redirect in middleware runs BEFORE admin role check to enforce first-login priority
 - [Phase 02-data-management-core]: authorize() returns forcePasswordReset to satisfy next-auth.d.ts User type; JWT callback reads fresh from DB
+- [Phase 02-data-management-core]: jest.config.ts jsx override: ts-jest configured with jsx=react-jsx inline to compile React JSX in component tests without separate tsconfig file
+- [Phase 02-data-management-core]: ActivateBatchButton extracted as separate client component to keep batch detail page a server component while enabling POST /activate mutation
+- [Phase 02-data-management-core]: Inline confirm pattern for destructive actions: Remove?/Yes,Remove/Keep Entry text links inline and Submit Day yellow banner — no modals per UI-SPEC interaction contract
 
 ### Performance Metrics
 
@@ -76,8 +79,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | Phase 02-data-management-core P02 | 7min | 2 tasks | 9 files |
 | Phase 02-data-management-core P03 | 3min | 2 tasks | 6 files |
 | 02-data-management-core | 04 | 12min | 2 | 9 |
+| Phase 02-data-management-core P05 | 10min | 3 tasks | 17 files |
 
 ## Last Session
 
-**Stopped at:** Completed 02-04-PLAN.md
+**Stopped at:** Completed 02-05-PLAN.md
 **Timestamp:** 2026-03-24T07:13:00Z
