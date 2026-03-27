@@ -93,6 +93,9 @@ export async function PATCH(
       ...(parsed.data.amount !== undefined && { amount: parsed.data.amount }),
       ...(parsed.data.hours !== undefined && { hours: parsed.data.hours }),
     },
+    include: {
+      employee: { select: { id: true, name: true } },
+    },
   })
 
   return NextResponse.json(updated)
