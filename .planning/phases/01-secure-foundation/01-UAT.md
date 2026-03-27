@@ -1,5 +1,5 @@
 ---
-status: complete
+status: resolved
 phase: 01-secure-foundation
 source: 01-01-SUMMARY.md, 01-02-SUMMARY.md, 01-03-SUMMARY.md, 01-04-SUMMARY.md
 started: 2026-03-20T00:00:00Z
@@ -42,9 +42,8 @@ result: pass
 
 ### 8. Admin Role Switcher
 expected: Log in as an Admin user. On the dashboard, a dropdown appears allowing you to switch between role views (Employee, Manager, Admin). Selecting "Employee" hides manager/admin-only content and shows only employee content. Switching back to Admin restores full access.
-result: issue
-reported: "you cannot see all the role views. they go past the screen view"
-severity: major
+result: pass
+note: "Fixed — dropdown now opens upward with correct z-index"
 
 ### 9. Logout
 expected: Click the logout button (visible in the nav or dashboard). You are signed out and redirected to the login page (or home). Navigating back to /dashboard redirects you to login again — session is fully cleared.
@@ -53,17 +52,11 @@ result: pass
 ## Summary
 
 total: 9
-passed: 8
-issues: 1
+passed: 9
+issues: 0
 pending: 0
 skipped: 0
 
 ## Gaps
 
-- truth: "Admin Role Switcher dropdown shows all role views (Employee, Manager, Admin) within the visible screen"
-  status: failed
-  reason: "User reported: you cannot see all the role views. they go past the screen view"
-  severity: major
-  test: 8
-  artifacts: []
-  missing: []
+(none)
