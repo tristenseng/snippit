@@ -24,22 +24,26 @@ export default function LoginForm() {
       })
 
       if (result?.error) {
-        setError('Invalid email or password')
+        if (result.error === 'AccountDeactivated') {
+          setError('This account has been deactivated. Contact your administrator.')
+        } else {
+          setError('Invalid email or password.')
+        }
       } else {
         router.push('/dashboard')
         router.refresh()
       }
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      setError('Connection failed. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium text-stone-700">
           Email address
         </label>
         <input
@@ -48,15 +52,15 @@ export default function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500
-                     min-h-[44px] text-base sm:text-sm"
-          placeholder="Enter your email"
+          className="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-lg bg-white
+                     placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                     min-h-[44px] text-base sm:text-sm transition-colors"
+          placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-medium text-stone-700">
           Password
         </label>
         <input
@@ -65,24 +69,28 @@ export default function LoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500
-                     min-h-[44px] text-base sm:text-sm"
-          placeholder="Enter your password"
+          className="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-lg bg-white
+                     placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                     min-h-[44px] text-base sm:text-sm transition-colors"
+          placeholder="••••••••"
         />
       </div>
 
       {error && (
-        <div className="text-red-600 text-sm mt-2" role="alert">{error}</div>
+        <div className="text-red-700 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2" role="alert">
+          {error}
+        </div>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md
-                   shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
-                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-                   disabled:bg-blue-400 disabled:cursor-not-allowed min-h-[44px]"
+        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg
+                   text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700
+                   active:scale-[0.98] active:bg-emerald-800
+                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500
+                   disabled:bg-emerald-400 disabled:cursor-not-allowed min-h-[44px]
+                   transition-all duration-200"
       >
         {loading ? 'Signing in...' : 'Sign in'}
       </button>

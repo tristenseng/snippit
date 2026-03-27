@@ -47,6 +47,11 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
+          // Block deactivated accounts from logging in
+          if (user.deactivatedAt) {
+            throw new Error("AccountDeactivated")
+          }
+
           return {
             id: user.id,
             email: user.email,
@@ -55,6 +60,9 @@ export const authOptions: NextAuthOptions = {
             forcePasswordReset: user.forcePasswordReset,
           }
         } catch (error) {
+          if (error instanceof Error && error.message === "AccountDeactivated") {
+            throw error
+          }
           console.error("Auth error:", error)
           return null
         }

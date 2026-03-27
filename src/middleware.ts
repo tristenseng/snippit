@@ -52,6 +52,9 @@ export const config = {
     "/admin/:path*",
     "/batches/:path*",
     "/set-password",
-    "/api/protected/:path*",
+    "/api/admin/:path*",
+    "/api/batches/:path*",
+    "/api/strains/:path*",
+    "/api/employees/:path*",
   ],
 }
