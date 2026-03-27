@@ -12,7 +12,13 @@ Employees can see their daily performance and commission progress immediately in
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Admins can add, edit, and delete employee accounts — Validated in Phase 01: secure-foundation
+- [x] Role-based access (Employee/Manager/Admin with appropriate overlaps) — Validated in Phase 01: secure-foundation
+- [x] Managers can create batches and daily entries with strain specification — Validated in Phase 02: data-management-core
+- [x] Managers can input employee weights with autocomplete search functionality — Validated in Phase 02: data-management-core
+- [x] Mobile-responsive design for phone usage — Validated in Phase 02: data-management-core
+- [x] Deactivated users blocked from login with distinct error message — Validated in Phase 03: gap-closure-auth-data
+- [x] All API routes protected by middleware — Validated in Phase 03: gap-closure-auth-data
 
 ### Active
 
@@ -67,4 +73,4 @@ Employees can see their daily performance and commission progress immediately in
 | Projected commission display | Motivates employees during active batches | — Pending |
 
 ---
-*Last updated: 2025-03-20 after milestone v1.0 started*
+*Last updated: 2026-03-27 — Phase 03 complete: auth hardening, middleware coverage, weight-entry UX fix*
