@@ -1,10 +1,11 @@
 ---
 phase: 2
 slug: data-management-core
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: validated
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-24
+audited: 2026-03-26
 ---
 
 # Phase 2 — Validation Strategy
@@ -38,15 +39,15 @@ created: 2026-03-24
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 2-W0-01 | Wave 0 | 0 | infra | setup | `npx jest --no-coverage` | ❌ W0 | ⬜ pending |
-| 2-01-01 | schema | 1 | DATA-01 | unit | `npx jest tests/api/batches.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-01-02 | schema | 1 | DATA-02 | unit | `npx jest tests/api/days.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-02-01 | api | 2 | DATA-01 | unit | `npx jest tests/api/batches.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-02-02 | api | 2 | DATA-02 | unit | `npx jest tests/api/days.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-02-03 | api | 2 | DATA-03 | unit | `npx jest tests/api/employees-search.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-02-04 | api | 2 | DATA-04 | unit | `npx jest tests/api/days.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-02-05 | api | 2 | ADMIN-01 | unit | `npx jest tests/api/admin-users.test.ts -x` | ❌ W0 | ⬜ pending |
-| 2-03-01 | ui | 3 | DATA-03 | unit | `npx jest tests/components/EmployeeAutocomplete.test.tsx -x` | ❌ W0 | ⬜ pending |
+| 2-W0-01 | Wave 0 | 0 | infra | setup | `npx jest --no-coverage` | ✅ | ✅ green |
+| 2-01-01 | schema | 1 | DATA-01 | unit | `npx jest tests/api/batches.test.ts -x` | ✅ | ✅ green |
+| 2-01-02 | schema | 1 | DATA-02 | unit | `npx jest tests/api/days.test.ts -x` | ✅ | ✅ green |
+| 2-02-01 | api | 2 | DATA-01 | unit | `npx jest tests/api/batches.test.ts -x` | ✅ | ✅ green |
+| 2-02-02 | api | 2 | DATA-02 | unit | `npx jest tests/api/days.test.ts -x` | ✅ | ✅ green |
+| 2-02-03 | api | 2 | DATA-03 | unit | `npx jest tests/api/employees-search.test.ts -x` | ✅ | ✅ green |
+| 2-02-04 | api | 2 | DATA-04 | unit | `npx jest tests/api/days.test.ts -x` | ✅ | ✅ green |
+| 2-02-05 | api | 2 | ADMIN-01 | unit | `npx jest tests/api/admin-users.test.ts -x` | ✅ | ✅ green |
+| 2-03-01 | ui | 3 | DATA-03 | unit | `npx jest tests/components/EmployeeAutocomplete.test.tsx -x` | ✅ | ✅ green (act() warnings, non-failing) |
 | 2-03-02 | ui | 3 | DATA-01–04 | manual | see Manual-Only | n/a | ⬜ pending |
 | 2-03-03 | ui | 3 | ADMIN-01 | manual | see Manual-Only | n/a | ⬜ pending |
 
@@ -56,13 +57,13 @@ created: 2026-03-24
 
 ## Wave 0 Requirements
 
-- [ ] `jest.config.ts` — Jest config for Next.js App Router (`moduleNameMapper` for `@/` alias, `testEnvironment: node`)
-- [ ] `tests/setup.ts` — shared Prisma mock and session mock fixtures
-- [ ] `tests/api/batches.test.ts` — stubs for DATA-01
-- [ ] `tests/api/days.test.ts` — stubs for DATA-02, DATA-04
-- [ ] `tests/api/employees-search.test.ts` — stubs for DATA-03 filter behavior
-- [ ] `tests/api/admin-users.test.ts` — stubs for ADMIN-01
-- [ ] `tests/components/EmployeeAutocomplete.test.tsx` — stubs for DATA-03 client filter
+- [x] `jest.config.ts` — Jest config for Next.js App Router (`moduleNameMapper` for `@/` alias, `testEnvironment: node`)
+- [x] `tests/setup.ts` — shared Prisma mock and session mock fixtures
+- [x] `tests/api/batches.test.ts` — stubs for DATA-01
+- [x] `tests/api/days.test.ts` — stubs for DATA-02, DATA-04
+- [x] `tests/api/employees-search.test.ts` — stubs for DATA-03 filter behavior
+- [x] `tests/api/admin-users.test.ts` — stubs for ADMIN-01
+- [x] `tests/components/EmployeeAutocomplete.test.tsx` — stubs for DATA-03 client filter
 
 ---
 
@@ -79,11 +80,24 @@ created: 2026-03-24
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s (suite runs in ~0.8s)
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** 2026-03-26 — 137 tests passing, 11 suites, 0 failures
+
+---
+
+## Validation Audit 2026-03-26
+
+| Metric | Count |
+|--------|-------|
+| Gaps found | 0 |
+| Resolved | 0 |
+| Escalated | 0 |
+| Tests total | 137 |
+| Suites total | 11 |
+| Phase-2 relevant | 67 (5 suites) |
