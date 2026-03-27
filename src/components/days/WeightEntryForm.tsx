@@ -71,7 +71,7 @@ export function WeightEntryForm({
           employeeId: selectedEmployee.id,
           batchStrainId: selectedBatchStrainId,
           amount: parseFloat(grams),
-          hours: hours ? parseFloat(hours) : null,
+          ...(hours ? { hours: parseFloat(hours) } : {}),
         }),
       })
       if (!res.ok) {
@@ -270,9 +270,14 @@ export function WeightEntryForm({
                   entry={entry}
                   batchId={batchId}
                   dayId={dayId}
-                  onUpdated={() => {
-                    // Re-fetch entries after update or remove from local state
-                    setEntries(prev => prev.filter(e => e.id !== entry.id))
+                  onUpdated={(updatedEntry) => {
+                    if (updatedEntry === null) {
+                      // Entry was deleted — remove from list
+                      setEntries(prev => prev.filter(e => e.id !== entry.id))
+                    } else {
+                      // Entry was edited — update in place
+                      setEntries(prev => prev.map(e => e.id === entry.id ? updatedEntry : e))
+                    }
                   }}
                 />
               </div>

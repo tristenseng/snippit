@@ -7,6 +7,7 @@ interface EmployeeDayEntry {
   id: string
   amount: number
   hours: number | null
+  batchStrainId: string
   employee: { id: string; name: string | null }
 }
 
@@ -14,7 +15,7 @@ interface WeightEntryRowProps {
   entry: EmployeeDayEntry
   batchId: string
   dayId: string
-  onUpdated: () => void
+  onUpdated: (updatedEntry: EmployeeDayEntry | null) => void
 }
 
 export function WeightEntryRow({ entry, batchId, dayId, onUpdated }: WeightEntryRowProps) {
@@ -39,8 +40,9 @@ export function WeightEntryRow({ entry, batchId, dayId, onUpdated }: WeightEntry
         }),
       })
       if (res.ok) {
+        const updated = await res.json()
         setEditing(false)
-        onUpdated()
+        onUpdated(updated)
       }
     } finally {
       setSaving(false)
@@ -52,7 +54,7 @@ export function WeightEntryRow({ entry, batchId, dayId, onUpdated }: WeightEntry
     try {
       const res = await fetch(endpoint, { method: 'DELETE' })
       if (res.ok) {
-        onUpdated()
+        onUpdated(null)
       }
     } finally {
       setDeleting(false)

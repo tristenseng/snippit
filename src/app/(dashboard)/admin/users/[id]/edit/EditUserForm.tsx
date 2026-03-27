@@ -115,7 +115,7 @@ export function EditUserForm({
         {deactivatedAt && (
           <InlineAlert
             type="error"
-            message="This account is deactivated. Reactivation is not yet supported."
+            message="This account is deactivated. Return to the user list and use the Reactivate button to restore access."
           />
         )}
 
