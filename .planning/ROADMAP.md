@@ -107,6 +107,11 @@ Plans:
 - Extend `config.matcher` in `src/middleware.ts` to cover actual API surface
 - Update misleading message in `EditUserForm.tsx`
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 03-01-PLAN.md — Auth hardening, middleware coverage, weight-entry edit fix, UI message correction
+
 ### Phase 4: Performance Visibility
 **Goal**: Provide employees with immediate visibility into their daily production and historical performance trends.
 
