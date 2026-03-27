@@ -13,10 +13,11 @@ This roadmap delivers the foundational cannabis employee performance tracking sy
 
 | # | Phase | Duration | Requirements | Dependencies |
 |---|-------|----------|--------------|--------------|
-| 1 | 4/4 | Complete   | 2026-03-20 | None |
-| 2 | 5/7 | In Progress|  | Phase 1 |
-| 3 | Performance Visibility | 2 weeks | PERF-01, PERF-02 | Phase 2 |
-| 4 | Commission & Analytics | 2-3 weeks | PERF-03, ADMIN-02 | Phase 3 |
+| 1 | Secure Foundation | Complete | AUTH-01..04, UX-01..02 | None |
+| 2 | Data Management Core | Complete | DATA-01..04, ADMIN-01 | Phase 1 |
+| 3 | Gap Closure — Auth & Data Fixes | 1 day | AUTH-02, ADMIN-01, DATA-03 | Phase 2 |
+| 4 | Performance Visibility | 2 weeks | PERF-01, PERF-02 | Phase 3 |
+| 5 | Commission & Analytics | 2-3 weeks | PERF-03, ADMIN-02 | Phase 4 |
 
 **Total estimated duration:** 8-11 weeks
 
@@ -82,10 +83,34 @@ Plans:
 - Batch and daily entry workflow with validation
 - Admin panel for user management
 
-### Phase 3: Performance Visibility  
+### Phase 3: Gap Closure — Auth & Data Fixes
+**Goal**: Close all gaps identified in the v1.0 milestone audit — block deactivated-user login, fix weight-entry edit UX, harden middleware coverage, and correct misleading UI messaging.
+
+**Why third**: These are security and correctness fixes that must land before Phase 4 delivers employee-facing features on top of this foundation.
+
+**Gap Closure**: Closes gaps from v1.0 milestone audit
+
+**Requirements**:
+- AUTH-02: Login must reject deactivated accounts
+- ADMIN-01: Deactivation must fully revoke access (including login gate)
+- DATA-03: Manager can edit existing weight entries (UI reflects saved state)
+
+**Success Criteria**:
+1. A deactivated user's password is rejected at login with a clear error
+2. An edited weight entry row remains visible and updated in the UI after saving
+3. Middleware matcher covers `/api/admin/*`, `/api/batches/*`, `/api/strains/*`, `/api/employees/*`
+4. EditUserForm on a deactivated account directs admin to user table for reactivation
+
+**Technical Implementation**:
+- Add `deactivatedAt` check in `CredentialsProvider.authorize` in `src/lib/auth.ts`
+- Fix `onUpdated` callback in `WeightEntryForm` to update row state instead of removing it
+- Extend `config.matcher` in `src/middleware.ts` to cover actual API surface
+- Update misleading message in `EditUserForm.tsx`
+
+### Phase 4: Performance Visibility
 **Goal**: Provide employees with immediate visibility into their daily production and historical performance trends.
 
-**Why third**: Core value delivery - employees can see their performance data instead of asking managers. Strain context ensures meaningful comparisons within cannabis operations.
+**Why fourth**: Core value delivery - employees can see their performance data instead of asking managers. Strain context ensures meaningful comparisons within cannabis operations.
 
 **Requirements**:
 - PERF-01: Employee can view their daily gram production with strain context
@@ -105,7 +130,7 @@ Plans:
 - Historical data aggregation and trend calculation
 - Mobile-optimized data visualization components
 
-### Phase 4: Commission & Analytics
+### Phase 5: Commission & Analytics
 **Goal**: Deliver transparent commission calculations and team analytics while maintaining individual privacy.
 
 **Why last**: Commission transparency is critical but requires solid data foundation. Team analytics provide management value while being privacy-compliant.
@@ -156,8 +181,9 @@ Based on research findings, key risks and mitigations:
 
 **Phase 1**: Authentication and mobile access working for all roles
 **Phase 2**: Managers can efficiently enter daily weight data
-**Phase 3**: Employees check their performance daily instead of asking managers
-**Phase 4**: Commission calculations are transparent and dispute-free
+**Phase 3**: All v1.0 audit gaps closed — deactivated login blocked, weight edit UX correct, middleware hardened
+**Phase 4**: Employees check their performance daily instead of asking managers
+**Phase 5**: Commission calculations are transparent and dispute-free
 
 **Overall Success**: Employees have immediate visibility into performance and earnings, reducing manager interruptions and improving performance through transparency.
 

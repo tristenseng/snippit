@@ -3,7 +3,7 @@
 ## v1 Requirements
 
 ### Authentication & Access Control
-- [x] **AUTH-01**: User can create account with email/password
+- [ ] **AUTH-01**: User can create account with email/password
 - [x] **AUTH-02**: User can log in and stay logged in across sessions  
 - [x] **AUTH-03**: User can log out from any page
 - [x] **AUTH-04**: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
@@ -80,11 +80,16 @@ Cannabis industry compliance requirements:
 - DATA-04: Manager can submit completed days to notify employees of new data
 - ADMIN-01: Admin can add, edit, and delete employee accounts
 
-### Phase 3: Performance Visibility
+### Phase 3: Gap Closure — Auth & Data Fixes
+- AUTH-02: Login must reject deactivated accounts (deactivatedAt check in authorize callback)
+- ADMIN-01: Deactivation must fully revoke access (login gate enforcement)
+- DATA-03: Manager can edit existing weight entries (UI reflects saved state)
+
+### Phase 4: Performance Visibility
 - PERF-01: Employee can view their daily gram production with strain context
 - PERF-02: Employee can see historical performance trends (day-to-day, batch-to-batch)
 
-### Phase 4: Commission & Analytics
+### Phase 5: Commission & Analytics
 - PERF-03: Employee can view projected commission earnings based on batch performance
 - ADMIN-02: Admin and Manager can view team-wide performance statistics
 
