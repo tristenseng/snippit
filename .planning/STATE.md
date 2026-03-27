@@ -3,28 +3,28 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-06-PLAN.md
-last_updated: "2026-03-25T16:20:21.297Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-27T04:50:26.821Z"
 progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 12
-  completed_plans: 12
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 13
+  completed_plans: 13
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: 02 (data-management-core) — EXECUTING
-Plan: 5 of 7
+Phase: 03 (gap-closure-auth-data) — EXECUTING
+Plan: 1 of 1
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2025-03-20)
 
 **Core value:** Employees can see their daily performance and commission progress immediately instead of having to ask managers
-**Current focus:** Phase 02 — data-management-core
+**Current focus:** Phase 03 — gap-closure-auth-data
 
 ## Accumulated Context
 
@@ -67,6 +67,8 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 02-data-management-core]: Inline confirm pattern for destructive actions: Remove?/Yes,Remove/Keep Entry text links inline and Submit Day yellow banner — no modals per UI-SPEC interaction contract
 - [Phase 02-data-management-core]: EditUserForm extracted as separate 'use client' file — Next.js App Router requires client components to be in separate files from server components
 - [Phase 02-data-management-core]: DeactivateConfirmDialog uses native <button> with ref for focus management instead of ActionButton (lacks forwardRef) — preserves focus trap without modifying shared component
+- [Phase 03-gap-closure-auth-data]: NextAuth v4 named error re-throw pattern: throw AccountDeactivated inside authorize try block, catch re-throws only that specific error to propagate to client
+- [Phase 03-gap-closure-auth-data]: WeightEntryRow onUpdated(entry | null) pattern: null = deletion, object = in-place update; batchStrainId added to local interface to match PATCH API response
 
 ### Performance Metrics
 
@@ -83,8 +85,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | 02-data-management-core | 04 | 12min | 2 | 9 |
 | Phase 02-data-management-core P05 | 10min | 3 tasks | 17 files |
 | Phase 02-data-management-core P06 | 5min | 2 tasks | 9 files |
+| Phase 03-gap-closure-auth-data P01 | 8min | 2 tasks | 6 files |
 
 ## Last Session
 
-**Stopped at:** Completed 02-06-PLAN.md
+**Stopped at:** Completed 03-01-PLAN.md
 **Timestamp:** 2026-03-24T07:13:00Z

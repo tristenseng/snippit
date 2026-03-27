@@ -15,7 +15,7 @@ This roadmap delivers the foundational cannabis employee performance tracking sy
 |---|-------|----------|--------------|--------------|
 | 1 | Secure Foundation | Complete | AUTH-01..04, UX-01..02 | None |
 | 2 | Data Management Core | Complete | DATA-01..04, ADMIN-01 | Phase 1 |
-| 3 | Gap Closure — Auth & Data Fixes | 1 day | AUTH-02, ADMIN-01, DATA-03 | Phase 2 |
+| 3 | 1/1 | Complete   | 2026-03-27 | Phase 2 |
 | 4 | Performance Visibility | 2 weeks | PERF-01, PERF-02 | Phase 3 |
 | 5 | Commission & Analytics | 2-3 weeks | PERF-03, ADMIN-02 | Phase 4 |
 
@@ -107,7 +107,7 @@ Plans:
 - Extend `config.matcher` in `src/middleware.ts` to cover actual API surface
 - Update misleading message in `EditUserForm.tsx`
 
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 03-01-PLAN.md — Auth hardening, middleware coverage, weight-entry edit fix, UI message correction
