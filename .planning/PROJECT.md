@@ -19,19 +19,13 @@ Employees can see their daily performance and commission progress immediately in
 - [x] Mobile-responsive design for phone usage — Validated in Phase 02: data-management-core
 - [x] Deactivated users blocked from login with distinct error message — Validated in Phase 03: gap-closure-auth-data
 - [x] All API routes protected by middleware — Validated in Phase 03: gap-closure-auth-data
+- [x] Employees can log in and view their daily gram production with strain context — Validated in Phase 04: performance-visibility
+- [x] Employees can see historical performance trends (day-to-day, batch-to-batch) — Validated in Phase 04: performance-visibility
 
 ### Active
 
-- [ ] Employees can log in and view their daily gram production with strain context
-- [ ] Employees can see historical performance trends (day-to-day, batch-to-batch)
 - [ ] Employees can view projected commission earnings based on batch performance
-- [ ] Managers can create batches and daily entries with strain specification
-- [ ] Managers can input employee weights with autocomplete search functionality
-- [ ] Managers can submit completed days to notify employees of new data
-- [ ] Admins can add, edit, and delete employee accounts
-- [ ] Role-based access (Employee/Manager/Admin with appropriate overlaps)
 - [ ] Team-wide performance statistics for managers and admins
-- [ ] Mobile-responsive design for phone usage
 
 ### Out of Scope
 
@@ -73,4 +67,4 @@ Employees can see their daily performance and commission progress immediately in
 | Projected commission display | Motivates employees during active batches | — Pending |
 
 ---
-*Last updated: 2026-03-27 — Phase 03 complete: auth hardening, middleware coverage, weight-entry UX fix*
+*Last updated: 2026-03-28 — Phase 04 complete: employee performance visibility, /performance page, strain breakdown, dashboard production card*
