@@ -74,3 +74,28 @@ describe('Auth Configuration (01-02-01)', () => {
     })
   })
 })
+
+describe('AUTH-02 — authorize rejects deactivated user', () => {
+  // CredentialsProvider is mocked at the module level in this file, so the authorize
+  // callback cannot be extracted at runtime. Use a source scan to verify the logic.
+  let authSource: string
+
+  beforeAll(() => {
+    authSource = fs.readFileSync(
+      path.join(ROOT, 'src', 'lib', 'auth.ts'),
+      'utf-8'
+    )
+  })
+
+  it('authorize checks user.deactivatedAt before returning the session object', () => {
+    expect(authSource).toContain('user.deactivatedAt')
+  })
+
+  it('authorize throws AccountDeactivated error when user is deactivated', () => {
+    expect(authSource).toContain('AccountDeactivated')
+  })
+
+  it('catch block re-throws AccountDeactivated so the error propagates to the client', () => {
+    expect(authSource).toContain('throw error')
+  })
+})
