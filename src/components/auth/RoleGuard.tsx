@@ -8,9 +8,10 @@ interface RoleGuardProps {
   allowedRoles: Role[]
   children: React.ReactNode
   fallback?: React.ReactNode
+  exact?: boolean
 }
 
-export function RoleGuard({ allowedRoles, children, fallback = null }: RoleGuardProps) {
+export function RoleGuard({ allowedRoles, children, fallback = null, exact = false }: RoleGuardProps) {
   const { data: session, status } = useSession()
 
   if (status === 'loading') {
@@ -26,7 +27,9 @@ export function RoleGuard({ allowedRoles, children, fallback = null }: RoleGuard
     return <>{fallback}</>
   }
 
-  const hasAccess = allowedRoles.some(role => hasRoleAccess(userRole as Role, role))
+  const hasAccess = exact
+    ? allowedRoles.includes(userRole as Role)
+    : allowedRoles.some(role => hasRoleAccess(userRole as Role, role))
 
   return hasAccess ? <>{children}</> : <>{fallback}</>
 }

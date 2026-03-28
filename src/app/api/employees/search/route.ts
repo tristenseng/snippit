@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
+import { withUser } from "@/lib/prisma"
 
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions)
@@ -16,15 +16,17 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "locationId query parameter is required" }, { status: 400 })
   }
 
-  const employees = await prisma.user.findMany({
-    where: {
-      deactivatedAt: null,
-      role: "EMPLOYEE",
-      userLocations: { some: { locationId } },
-    },
-    select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  })
+  const employees = await withUser(session.user.id, (tx) =>
+    tx.user.findMany({
+      where: {
+        deactivatedAt: null,
+        role: "EMPLOYEE",
+        userLocations: { some: { locationId } },
+      },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    })
+  )
 
   return NextResponse.json(employees)
 }

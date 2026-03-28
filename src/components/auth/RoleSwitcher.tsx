@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Role } from "@prisma/client"
 import { getAvailableRoles } from "@/lib/rbac"
 
-export function RoleSwitcher() {
+export function RoleSwitcher({ dropDirection = 'up' }: { dropDirection?: 'up' | 'down' }) {
   const { data: session, update } = useSession()
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
@@ -41,7 +41,7 @@ export function RoleSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 bottom-full mb-2 w-48 bg-white rounded-md shadow-lg z-[60]" role="listbox">
+        <div className={`absolute right-0 w-48 bg-white rounded-md shadow-lg z-[60] ${dropDirection === 'down' ? 'top-full mt-1' : 'bottom-full mb-2'}`} role="listbox">
           <div className="py-1">
             {availableRoles.map((role) => (
               <button

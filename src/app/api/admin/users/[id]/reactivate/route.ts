@@ -22,13 +22,13 @@ export async function POST(
     }
 
     const user = await withUser(session.user.id, (tx) =>
-      tx.user.update({ where: { id: params.id }, data: { deactivatedAt: new Date() } })
+      tx.user.update({ where: { id: params.id }, data: { deactivatedAt: null } })
     )
 
     const { password: _pw, ...sanitized } = user
     return NextResponse.json(sanitized, { status: 200 })
   } catch (error) {
-    console.error("POST /api/admin/users/[id]/deactivate error:", error)
+    console.error("POST /api/admin/users/[id]/reactivate error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

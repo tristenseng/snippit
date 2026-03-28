@@ -127,6 +127,10 @@ export async function POST(
       amount,
       hours,
     },
+    include: {
+      employee: { select: { id: true, name: true } },
+      batchStrain: { include: { strain: { select: { id: true, name: true } } } },
+    },
   })
 
   return NextResponse.json(entry, { status: 201 })

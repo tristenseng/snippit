@@ -17,18 +17,21 @@ export function getAvailableRoles(userRole: Role): Role[] {
 export const ROLE_PERMISSIONS = {
   ADMIN: {
     canManageUsers: true,
+    canManageStrains: true,
     canManageBatches: true,
     canViewAllPerformance: true,
     canSwitchRoles: true,
   },
   MANAGER: {
     canManageUsers: false,
+    canManageStrains: false,
     canManageBatches: true,
     canViewAllPerformance: true,
     canSwitchRoles: false,
   },
   EMPLOYEE: {
     canManageUsers: false,
+    canManageStrains: false,
     canManageBatches: false,
     canViewAllPerformance: false,
     canSwitchRoles: false,

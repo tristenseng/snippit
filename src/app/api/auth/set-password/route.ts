@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { hash } from "bcryptjs"
-import { prisma } from "@/lib/prisma"
+import { withUser } from "@/lib/prisma"
 import { authOptions } from "@/lib/auth"
 
 const setPasswordSchema = z.object({
@@ -28,13 +28,12 @@ export async function POST(req: Request) {
     const { password } = parsed.data
     const hashedPassword = await hash(password, 12)
 
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: {
-        password: hashedPassword,
-        forcePasswordReset: false,
-      },
-    })
+    await withUser(session.user.id, (tx) =>
+      tx.user.update({
+        where: { id: session.user.id },
+        data: { password: hashedPassword, forcePasswordReset: false },
+      })
+    )
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {

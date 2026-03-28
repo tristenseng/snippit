@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { prisma } from "@/lib/prisma"
+import { prisma, withUser, setUserContext } from "@/lib/prisma"
 import { authOptions } from "@/lib/auth"
 import { ROLE_PERMISSIONS } from "@/lib/rbac"
 import type { Role } from "@prisma/client"
@@ -30,16 +30,18 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: params.id },
-      include: {
-        userLocations: {
-          include: {
-            location: { select: { id: true, name: true } },
+    const user = await withUser(session.user.id, (tx) =>
+      tx.user.findUnique({
+        where: { id: params.id },
+        include: {
+          userLocations: {
+            include: {
+              location: { select: { id: true, name: true } },
+            },
           },
         },
-      },
-    })
+      })
+    )
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
@@ -81,6 +83,7 @@ export async function PATCH(
     const { name, role, locationId, locationIds } = parsed.data
 
     const user = await prisma.$transaction(async (tx) => {
+      await setUserContext(tx, session.user.id)
       const updated = await tx.user.update({
         where: { id: params.id },
         data: {
@@ -95,6 +98,13 @@ export async function PATCH(
         if (locationIds.length > 0) {
           await tx.userLocation.createMany({
             data: locationIds.map((locId) => ({ userId: params.id, locationId: locId })),
+          })
+        }
+      } else if (locationId !== undefined) {
+        await tx.userLocation.deleteMany({ where: { userId: params.id } })
+        if (locationId) {
+          await tx.userLocation.create({
+            data: { userId: params.id, locationId },
           })
         }
       }

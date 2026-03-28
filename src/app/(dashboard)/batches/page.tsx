@@ -53,20 +53,20 @@ export default async function BatchesPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-gray-900">Batch Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-stone-900">Batch management</h2>
         <Link
           href="/batches/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-4 py-2 min-h-[44px] inline-flex items-center text-sm transition-colors"
+          className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 active:scale-[0.98] text-white font-semibold rounded-lg px-4 py-2 min-h-[44px] inline-flex items-center text-sm transition-all duration-200"
         >
-          Create Batch
+          Create batch
         </Link>
       </div>
 
       {/* Batch list */}
       {batches.length === 0 ? (
         <div className="text-center py-16">
-          <h3 className="text-lg font-semibold text-gray-900">No batches yet</h3>
-          <p className="text-sm text-gray-600 mt-1">
+          <h3 className="text-lg font-semibold text-stone-900">No batches yet</h3>
+          <p className="text-sm text-stone-500 mt-1">
             Create your first batch to start recording daily production.
           </p>
         </div>

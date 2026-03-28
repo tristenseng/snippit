@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Role } from '@prisma/client'
 import { UserRoleBadge } from './UserRoleBadge'
@@ -28,6 +29,31 @@ interface UserTableProps {
   onRefresh: () => void
 }
 
+function ReactivateButton({ userId, onRefresh }: { userId: string; onRefresh: () => void }) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleReactivate() {
+    setLoading(true)
+    try {
+      await fetch(`/api/admin/users/${userId}/reactivate`, { method: 'POST' })
+      onRefresh()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleReactivate}
+      disabled={loading}
+      className="text-sm text-green-600 hover:text-green-800 font-medium min-h-[44px] inline-flex items-center disabled:opacity-50"
+      type="button"
+    >
+      {loading ? 'Reactivating…' : 'Reactivate'}
+    </button>
+  )
+}
+
 function StatusBadge({ deactivatedAt }: { deactivatedAt: Date | null }) {
   if (deactivatedAt) {
     return (
@@ -48,7 +74,7 @@ function formatLocations(userLocations: UserLocation[]): string {
   return userLocations.map((ul) => ul.location.name).join(', ')
 }
 
-export function UserTable({ users, onDeactivate }: UserTableProps) {
+export function UserTable({ users, onDeactivate, onRefresh }: UserTableProps) {
   if (users.length === 0) {
     return (
       <div className="text-center py-12">
@@ -107,7 +133,9 @@ export function UserTable({ users, onDeactivate }: UserTableProps) {
                     >
                       Edit
                     </Link>
-                    {!user.deactivatedAt && (
+                    {user.deactivatedAt ? (
+                      <ReactivateButton userId={user.id} onRefresh={onRefresh} />
+                    ) : (
                       <button
                         onClick={() => onDeactivate(user)}
                         className="text-sm text-red-600 hover:text-red-800 font-medium min-h-[44px] inline-flex items-center"
@@ -151,7 +179,9 @@ export function UserTable({ users, onDeactivate }: UserTableProps) {
               >
                 Edit
               </Link>
-              {!user.deactivatedAt && (
+              {user.deactivatedAt ? (
+                <ReactivateButton userId={user.id} onRefresh={onRefresh} />
+              ) : (
                 <button
                   onClick={() => onDeactivate(user)}
                   className="text-sm text-red-600 hover:text-red-800 font-medium min-h-[44px] inline-flex items-center"

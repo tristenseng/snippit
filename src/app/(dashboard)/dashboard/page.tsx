@@ -8,62 +8,52 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-4">
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="text-sm text-gray-600 capitalize">
+      <div className="border-b border-stone-200 pb-4">
+        <h2 className="text-2xl font-bold tracking-tight text-stone-900">Dashboard</h2>
+        <p className="text-sm text-stone-500 mt-1 capitalize">
           Viewing as: {userRole?.toLowerCase()}
         </p>
       </div>
 
       {/* Role-specific dashboard content */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
         {/* Employee Dashboard Cards */}
         <RoleGuard allowedRoles={[Role.EMPLOYEE]}>
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">My Performance</h3>
-              <p className="text-3xl font-bold text-blue-600">--</p>
-              <p className="text-sm text-gray-500 mt-2">Today&apos;s production</p>
-            </div>
+          <div className="bg-white rounded-xl border border-stone-200 p-5">
+            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Today&apos;s production</p>
+            <p className="text-3xl font-bold text-stone-900 mt-2 tabular-nums">—</p>
+            <p className="text-sm font-medium text-stone-600 mt-1">My performance</p>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Commission</h3>
-              <p className="text-3xl font-bold text-green-600">$--</p>
-              <p className="text-sm text-gray-500 mt-2">Projected earnings</p>
-            </div>
+          <div className="bg-white rounded-xl border border-stone-200 p-5">
+            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Projected earnings</p>
+            <p className="text-3xl font-bold text-emerald-600 mt-2 tabular-nums">$—</p>
+            <p className="text-sm font-medium text-stone-600 mt-1">Commission</p>
           </div>
         </RoleGuard>
 
         {/* Manager Dashboard Cards */}
         <RoleGuard allowedRoles={[Role.MANAGER]}>
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Active Batches</h3>
-              <p className="text-3xl font-bold text-purple-600">--</p>
-              <p className="text-sm text-gray-500 mt-2">Currently processing</p>
-            </div>
+          <div className="bg-white rounded-xl border border-stone-200 p-5">
+            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Currently processing</p>
+            <p className="text-3xl font-bold text-stone-900 mt-2 tabular-nums">—</p>
+            <p className="text-sm font-medium text-stone-600 mt-1">Active batches</p>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Team Performance</h3>
-              <p className="text-3xl font-bold text-orange-600">--%</p>
-              <p className="text-sm text-gray-500 mt-2">Average efficiency</p>
-            </div>
+          <div className="bg-white rounded-xl border border-stone-200 p-5">
+            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Average efficiency</p>
+            <p className="text-3xl font-bold text-stone-900 mt-2 tabular-nums">—%</p>
+            <p className="text-sm font-medium text-stone-600 mt-1">Team performance</p>
           </div>
         </RoleGuard>
 
         {/* Admin Dashboard Cards */}
         <RoleGuard allowedRoles={[Role.ADMIN]}>
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">System Users</h3>
-              <p className="text-3xl font-bold text-red-600">--</p>
-              <p className="text-sm text-gray-500 mt-2">Total registered</p>
-            </div>
+          <div className="bg-white rounded-xl border border-stone-200 p-5">
+            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Total registered</p>
+            <p className="text-3xl font-bold text-stone-900 mt-2 tabular-nums">—</p>
+            <p className="text-sm font-medium text-stone-600 mt-1">System users</p>
           </div>
         </RoleGuard>
 

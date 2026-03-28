@@ -30,9 +30,10 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const pathname = req.nextUrl.pathname
 
-        // Always allow auth routes and public pages
+        // Always allow NextAuth internal routes and public pages
+        // Note: /api/auth/set-password is NOT a NextAuth route — it requires a token
         if (
-          pathname.startsWith('/api/auth') ||
+          (pathname.startsWith('/api/auth') && pathname !== '/api/auth/set-password') ||
           pathname === '/login' ||
           pathname === '/'
         ) {
@@ -56,5 +57,6 @@ export const config = {
     "/api/batches/:path*",
     "/api/strains/:path*",
     "/api/employees/:path*",
+    "/api/auth/set-password",
   ],
 }

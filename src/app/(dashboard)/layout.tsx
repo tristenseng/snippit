@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { MobileNav } from "@/components/navigation/MobileNav"
-import { SessionProvider } from "next-auth/react"
+import { SessionProviderWrapper } from "@/components/providers/SessionProviderWrapper"
 
 export default async function DashboardLayout({
   children,
@@ -15,27 +15,17 @@ export default async function DashboardLayout({
   }
 
   return (
-    <SessionProvider session={session}>
-      <div className="min-h-screen bg-gray-50">
+    <SessionProviderWrapper session={session}>
+      <div className="min-h-screen bg-stone-50">
         {/* Top navigation bar */}
-        <nav className="bg-white shadow-sm border-b border-gray-200">
+        <nav className="bg-white border-b border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex items-center">
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Performance Tracker
-                </h1>
+                <span className="text-lg font-bold tracking-tight text-stone-900">Snippit</span>
               </div>
 
-              <div className="flex items-center space-x-4">
-                {/* User info - hidden on small screens */}
-                <div className="hidden sm:block text-sm text-gray-700">
-                  Welcome, {session.user?.name || session.user?.email}
-                </div>
-
-                {/* Mobile hamburger menu */}
-                <MobileNav />
-              </div>
+              <MobileNav />
             </div>
           </div>
         </nav>
@@ -45,6 +35,6 @@ export default async function DashboardLayout({
           {children}
         </main>
       </div>
-    </SessionProvider>
+    </SessionProviderWrapper>
   )
 }

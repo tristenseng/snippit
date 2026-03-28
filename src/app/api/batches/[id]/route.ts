@@ -56,6 +56,51 @@ export async function GET(
   return NextResponse.json(batch)
 }
 
+export async function DELETE(
+  _request: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activeRole = (session.user as any).activeRole ?? session.user.role
+  if (!ROLE_PERMISSIONS[activeRole as keyof typeof ROLE_PERMISSIONS]?.canManageBatches) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  }
+
+  const batch = await prisma.batch.findUnique({
+    where: { id: params.id },
+    select: { id: true, locationId: true },
+  })
+  if (!batch) {
+    return NextResponse.json({ error: "Batch not found" }, { status: 404 })
+  }
+
+  if (activeRole !== "ADMIN") {
+    const locationId = await getLocationId(session.user.id)
+    if (batch.locationId !== locationId) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
+    }
+  }
+
+  const entryCount = await prisma.employeeDay.count({
+    where: { day: { batchId: params.id } },
+  })
+  if (entryCount > 0) {
+    return NextResponse.json(
+      { error: "Cannot delete a batch that has weight entries" },
+      { status: 409 }
+    )
+  }
+
+  await prisma.batch.delete({ where: { id: params.id } })
+
+  return new NextResponse(null, { status: 204 })
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }

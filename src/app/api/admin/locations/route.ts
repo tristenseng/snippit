@@ -5,10 +5,14 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { ROLE_PERMISSIONS } from "@/lib/rbac"
 
-const createStrainSchema = z.object({
-  name: z.string().min(1).max(50),
-  description: z.string().max(200).optional(),
+const createLocationSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(300).optional(),
 })
+
+function adminOnly(activeRole: string) {
+  return ROLE_PERMISSIONS[activeRole as keyof typeof ROLE_PERMISSIONS]?.canManageUsers
+}
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -16,11 +20,20 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const strains = await prisma.strain.findMany({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activeRole = (session.user as any).activeRole ?? session.user.role
+  if (!adminOnly(activeRole)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  }
+
+  const locations = await prisma.location.findMany({
     orderBy: { name: "asc" },
+    include: {
+      _count: { select: { users: true, batches: true, userLocations: true } },
+    },
   })
 
-  return NextResponse.json(strains)
+  return NextResponse.json(locations)
 }
 
 export async function POST(request: Request) {
@@ -31,12 +44,12 @@ export async function POST(request: Request) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const activeRole = (session.user as any).activeRole ?? session.user.role
-  if (!ROLE_PERMISSIONS[activeRole as keyof typeof ROLE_PERMISSIONS]?.canManageStrains) {
+  if (!adminOnly(activeRole)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
   const body = await request.json().catch(() => null)
-  const parsed = createStrainSchema.safeParse(body)
+  const parsed = createLocationSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Validation error", details: parsed.error.flatten() },
@@ -44,12 +57,12 @@ export async function POST(request: Request) {
     )
   }
 
-  const strain = await prisma.strain.create({
+  const location = await prisma.location.create({
     data: {
       name: parsed.data.name,
       description: parsed.data.description,
     },
   })
 
-  return NextResponse.json(strain, { status: 201 })
+  return NextResponse.json(location, { status: 201 })
 }

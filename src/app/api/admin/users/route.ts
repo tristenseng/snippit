@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { hash } from "bcryptjs"
-import { prisma } from "@/lib/prisma"
+import { prisma, withUser, setUserContext } from "@/lib/prisma"
 import { authOptions } from "@/lib/auth"
 import { ROLE_PERMISSIONS } from "@/lib/rbac"
 import type { Role } from "@prisma/client"
@@ -29,16 +29,18 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    const users = await prisma.user.findMany({
-      include: {
-        userLocations: {
-          include: {
-            location: { select: { id: true, name: true } },
+    const users = await withUser(session.user.id, (tx) =>
+      tx.user.findMany({
+        include: {
+          userLocations: {
+            include: {
+              location: { select: { id: true, name: true } },
+            },
           },
         },
-      },
-      orderBy: { name: "asc" },
-    })
+        orderBy: { name: "asc" },
+      })
+    )
 
     const sanitized = users.map(({ password: _pw, ...user }) => user)
     return NextResponse.json(sanitized, { status: 200 })
@@ -73,7 +75,9 @@ export async function POST(req: Request) {
     const { name, email, password, role, locationId, locationIds } = parsed.data
 
     // Check email uniqueness
-    const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
+    const existing = await withUser(session.user.id, (tx) =>
+      tx.user.findUnique({ where: { email: email.toLowerCase() } })
+    )
     if (existing) {
       return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
@@ -81,6 +85,7 @@ export async function POST(req: Request) {
     const hashedPassword = await hash(password, 12)
 
     const user = await prisma.$transaction(async (tx) => {
+      await setUserContext(tx, session.user.id)
       const created = await tx.user.create({
         data: {
           name,
@@ -95,6 +100,10 @@ export async function POST(req: Request) {
       if (role === "EMPLOYEE" && locationIds?.length) {
         await tx.userLocation.createMany({
           data: locationIds.map((locId) => ({ userId: created.id, locationId: locId })),
+        })
+      } else if (role !== "EMPLOYEE" && locationId) {
+        await tx.userLocation.create({
+          data: { userId: created.id, locationId },
         })
       }
 

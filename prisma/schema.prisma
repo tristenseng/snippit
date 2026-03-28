@@ -81,6 +81,7 @@ model VerificationToken {
 model Location {
   id            String         @id @default(cuid())
   name          String
+  description   String?
   users         User[]         @relation("UserPrimaryLocation")
   batches       Batch[]
   userLocations UserLocation[]

@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { BatchStatusBadge } from '@/components/batches/BatchStatusBadge'
 import { DayList } from '@/components/batches/DayList'
 import { ActivateBatchButton } from '@/components/batches/ActivateBatchButton'
+import { DeleteBatchButton } from '@/components/batches/DeleteBatchButton'
 import { Role } from '@prisma/client'
 
 interface PageProps {
@@ -62,6 +63,7 @@ export default async function BatchDetailPage({ params }: PageProps) {
   }
 
   const strainNames = batch.batchStrains.map(bs => bs.strain.name)
+  const hasEntries = batch.days.some(d => d._count.employeeDays > 0)
 
   return (
     <div className="space-y-6">
@@ -93,9 +95,12 @@ export default async function BatchDetailPage({ params }: PageProps) {
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 items-center">
           {batch.status === 'INACTIVE' && (
             <ActivateBatchButton batchId={batch.id} />
+          )}
+          {!hasEntries && (
+            <DeleteBatchButton batchId={batch.id} />
           )}
         </div>
       </div>

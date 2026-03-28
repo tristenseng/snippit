@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
+import { prisma, withUser } from "@/lib/prisma"
 import { ROLE_PERMISSIONS } from "@/lib/rbac"
 
 const createBatchSchema = z.object({
@@ -21,10 +21,9 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const manager = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { locationId: true },
-  })
+  const manager = await withUser(session.user.id, (tx) =>
+    tx.user.findUnique({ where: { id: session.user.id }, select: { locationId: true } })
+  )
 
   const where = activeRole === "ADMIN" ? {} : { locationId: manager?.locationId ?? undefined }
 
@@ -63,16 +62,21 @@ export async function POST(request: Request) {
 
   const { strainIds } = parsed.data
 
-  const manager = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { locationId: true },
-  })
+  const manager = await withUser(session.user.id, (tx) =>
+    tx.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        locationId: true,
+        userLocations: { select: { locationId: true }, take: 1 },
+      },
+    })
+  )
 
-  if (!manager?.locationId) {
+  const locationId = manager?.locationId ?? manager?.userLocations?.[0]?.locationId ?? null
+
+  if (!locationId) {
     return NextResponse.json({ error: "Manager has no assigned location" }, { status: 422 })
   }
-
-  const locationId = manager.locationId
 
   // Enforce one ACTIVE batch per location
   const activeBatch = await prisma.batch.findFirst({
