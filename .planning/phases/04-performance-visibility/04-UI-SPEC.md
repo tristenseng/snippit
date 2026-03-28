@@ -52,14 +52,15 @@ Exceptions:
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px (`text-sm`) | 400 regular | 1.5 |
-| Label / Caption | 12px (`text-xs`) | 600 semibold | 1.4 |
+| Label / Caption | 12px (`text-xs`) | 700 bold | 1.4 |
 | Heading | 24px (`text-2xl`) | 700 bold | 1.2 |
 | Display / Metric | 30px (`text-3xl`) | 700 bold | 1.1 (tabular-nums) |
 
 Notes:
-- `text-xs font-semibold uppercase tracking-wider` is the established card label pattern (e.g., "TODAY'S PRODUCTION"). Use this exactly for section labels on the `/performance` page.
+- `text-xs font-bold uppercase tracking-wider` is the card label pattern (e.g., "TODAY'S PRODUCTION"). Use this exactly for section labels on the `/performance` page. The uppercase and letter-spacing provide sufficient visual distinction at 12px without needing a separate weight tier.
 - `tabular-nums` is required on all numeric gram values to prevent layout shift as numbers change. Source: `dashboard/page.tsx` line 25.
-- Outfit font weights available: 300, 400, 500, 600, 700 — only 400 (regular) and 700 (bold) are used in this phase. 600 (semibold) is used for labels and nav links.
+- Outfit font weights available: 300, 400, 500, 600, 700 — only 400 (regular) and 700 (bold) are used in this phase.
+- Weight scale: 400 regular + 700 bold only. `font-semibold` (`600`) is not used in this phase.
 
 ---
 
@@ -111,7 +112,7 @@ These components are used in Phase 4. Each entry notes whether it is new or reus
 - The card (`bg-white rounded-xl border border-stone-200 p-5`) becomes a `<Link href="/performance">` wrapper.
 - On hover: `hover:border-stone-300 hover:shadow-sm transition-all duration-200` — matches `BatchCard.tsx` hover pattern.
 - Card content:
-  - Line 1: `text-xs font-semibold text-stone-400 uppercase tracking-wider` — label "TODAY'S PRODUCTION"
+  - Line 1: `text-xs font-bold text-stone-400 uppercase tracking-wider` — label "TODAY'S PRODUCTION"
   - Line 2: `text-3xl font-bold text-stone-900 mt-2 tabular-nums` — total grams value (e.g., `842g`)
   - Line 3: `text-sm font-medium text-stone-600 mt-1` — date + day context (e.g., `March 24 · Day 3`)
 - Touch target: the entire card is the tap target. No separate button needed.
@@ -120,7 +121,7 @@ These components are used in Phase 4. Each entry notes whether it is new or reus
 
 Three sections stacked vertically with `space-y-6` between them:
 
-1. **Recent Batch Section** — heading `text-lg font-semibold text-stone-900 mb-3`, followed by a list of `StrainBreakdownRow` components.
+1. **Recent Batch Section** — heading `text-lg font-bold text-stone-900 mb-3`, followed by a list of `StrainBreakdownRow` components.
 2. **Batch History Cards** — heading same style, followed by `grid grid-cols-1 sm:grid-cols-2 gap-4` of batch summary cards.
 3. **Strain Totals Section** — heading same style, followed by a simple list of `strain name: Ng total across all batches`.
 
@@ -141,9 +142,9 @@ Each batch card follows the `BatchCard.tsx` pattern exactly:
 - `bg-white rounded-xl border border-stone-200 p-4 flex flex-col gap-3`
 - No hover link needed (read-only, no navigation action within this phase).
 - Content:
-  - `text-base font-semibold text-stone-900` — "Batch #N"
+  - `text-base font-bold text-stone-900` — "Batch #N"
   - `text-sm text-stone-500` — date range (e.g., `Mar 1 – Mar 15`)
-  - `text-sm font-semibold text-stone-900 tabular-nums` — total grams (e.g., `4,820g total`)
+  - `text-sm font-bold text-stone-900 tabular-nums` — total grams (e.g., `4,820g total`)
 
 ### Strain Totals Section
 
@@ -192,7 +193,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 1: Recent Batch days -->
   <section>
-    <h3 class="text-lg font-semibold text-stone-900 mb-3">Recent Batch</h3>
+    <h3 class="text-lg font-bold text-stone-900 mb-3">Recent Batch</h3>
     <div class="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100">
       <!-- StrainBreakdownRow × N days -->
     </div>
@@ -200,7 +201,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 2: Batch history cards -->
   <section>
-    <h3 class="text-lg font-semibold text-stone-900 mb-3">Batch History</h3>
+    <h3 class="text-lg font-bold text-stone-900 mb-3">Batch History</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- Batch summary card × N batches (excluding most recent) -->
     </div>
@@ -208,7 +209,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 3: Strain totals -->
   <section>
-    <h3 class="text-lg font-semibold text-stone-900 mb-3">Strain Totals</h3>
+    <h3 class="text-lg font-bold text-stone-900 mb-3">Strain Totals</h3>
     <div class="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100 px-4">
       <!-- Strain row × N strains -->
     </div>
