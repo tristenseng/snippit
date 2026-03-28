@@ -19,7 +19,7 @@ async function getManagerLocation(userId: string): Promise<string | null> {
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string; dayId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -32,8 +32,9 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  const { id, dayId } = await params
   const day = await prisma.day.findUnique({
-    where: { id: params.dayId },
+    where: { id: dayId },
     include: {
       employeeDays: {
         include: {
@@ -44,12 +45,12 @@ export async function GET(
     },
   })
 
-  if (!day || day.batchId !== params.id) {
+  if (!day || day.batchId !== id) {
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
   if (activeRole !== "ADMIN") {
-    const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+    const batch = await prisma.batch.findUnique({ where: { id } })
     const locationId = await getManagerLocation(session.user.id)
     if (!batch || batch.locationId !== locationId) {
       return NextResponse.json({ error: "Not found" }, { status: 404 })
@@ -61,7 +62,7 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string; dayId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -74,13 +75,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const day = await prisma.day.findUnique({ where: { id: params.dayId } })
-  if (!day || day.batchId !== params.id) {
+  const { id, dayId } = await params
+  const day = await prisma.day.findUnique({ where: { id: dayId } })
+  if (!day || day.batchId !== id) {
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
   if (activeRole !== "ADMIN") {
-    const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+    const batch = await prisma.batch.findUnique({ where: { id } })
     const locationId = await getManagerLocation(session.user.id)
     if (!batch || batch.locationId !== locationId) {
       return NextResponse.json({ error: "Not found" }, { status: 404 })
@@ -97,7 +99,7 @@ export async function PATCH(
   }
 
   const updated = await prisma.day.update({
-    where: { id: params.dayId },
+    where: { id: dayId },
     data: { notes: parsed.data.notes },
   })
 

@@ -20,7 +20,7 @@ async function getLocationId(userId: string): Promise<string | null> {
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -33,8 +33,9 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  const { id } = await params
   const batch = await prisma.batch.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       batchStrains: { include: { strain: true } },
       days: { orderBy: { batchDay: "asc" } },
@@ -58,7 +59,7 @@ export async function GET(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -71,8 +72,9 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  const { id } = await params
   const batch = await prisma.batch.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, locationId: true },
   })
   if (!batch) {
@@ -87,7 +89,7 @@ export async function DELETE(
   }
 
   const entryCount = await prisma.employeeDay.count({
-    where: { day: { batchId: params.id } },
+    where: { day: { batchId: id } },
   })
   if (entryCount > 0) {
     return NextResponse.json(
@@ -96,14 +98,14 @@ export async function DELETE(
     )
   }
 
-  await prisma.batch.delete({ where: { id: params.id } })
+  await prisma.batch.delete({ where: { id } })
 
   return new NextResponse(null, { status: 204 })
 }
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -125,7 +127,8 @@ export async function PATCH(
     )
   }
 
-  const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+  const { id } = await params
+  const batch = await prisma.batch.findUnique({ where: { id } })
   if (!batch) {
     return NextResponse.json({ error: "Batch not found" }, { status: 404 })
   }
@@ -147,7 +150,7 @@ export async function PATCH(
   }
 
   const updated = await prisma.batch.update({
-    where: { id: params.id },
+    where: { id },
     data: updateData,
   })
 

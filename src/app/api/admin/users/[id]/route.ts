@@ -16,7 +16,7 @@ const updateUserSchema = z.object({
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -30,9 +30,10 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const { id } = await params
     const user = await withUser(session.user.id, (tx) =>
       tx.user.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
           userLocations: {
             include: {
@@ -57,7 +58,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -80,12 +81,13 @@ export async function PATCH(
       )
     }
 
+    const { id } = await params
     const { name, role, locationId, locationIds } = parsed.data
 
     const user = await prisma.$transaction(async (tx) => {
       await setUserContext(tx, session.user.id)
       const updated = await tx.user.update({
-        where: { id: params.id },
+        where: { id },
         data: {
           ...(name !== undefined && { name }),
           ...(role !== undefined && { role }),
@@ -94,17 +96,17 @@ export async function PATCH(
       })
 
       if (locationIds !== undefined) {
-        await tx.userLocation.deleteMany({ where: { userId: params.id } })
+        await tx.userLocation.deleteMany({ where: { userId: id } })
         if (locationIds.length > 0) {
           await tx.userLocation.createMany({
-            data: locationIds.map((locId) => ({ userId: params.id, locationId: locId })),
+            data: locationIds.map((locId) => ({ userId: id, locationId: locId })),
           })
         }
       } else if (locationId !== undefined) {
-        await tx.userLocation.deleteMany({ where: { userId: params.id } })
+        await tx.userLocation.deleteMany({ where: { userId: id } })
         if (locationId) {
           await tx.userLocation.create({
-            data: { userId: params.id, locationId },
+            data: { userId: id, locationId },
           })
         }
       }

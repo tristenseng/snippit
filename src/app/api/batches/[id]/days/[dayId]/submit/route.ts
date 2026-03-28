@@ -6,7 +6,7 @@ import { ROLE_PERMISSIONS } from "@/lib/rbac"
 
 export async function POST(
   _request: Request,
-  { params }: { params: { id: string; dayId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -19,13 +19,14 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const day = await prisma.day.findUnique({ where: { id: params.dayId } })
-  if (!day || day.batchId !== params.id) {
+  const { id, dayId } = await params
+  const day = await prisma.day.findUnique({ where: { id: dayId } })
+  if (!day || day.batchId !== id) {
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
   if (activeRole !== "ADMIN") {
-    const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+    const batch = await prisma.batch.findUnique({ where: { id } })
     const manager = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: { locationId: true },
@@ -37,7 +38,7 @@ export async function POST(
 
   // Idempotent — submitted days remain fully editable per CONTEXT.md
   const updated = await prisma.day.update({
-    where: { id: params.dayId },
+    where: { id: dayId },
     data: { isSubmitted: true },
   })
 

@@ -7,7 +7,7 @@ import type { Role } from "@prisma/client"
 
 export async function POST(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -21,14 +21,15 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const { id } = await params
     const user = await withUser(session.user.id, (tx) =>
-      tx.user.update({ where: { id: params.id }, data: { deactivatedAt: new Date() } })
+      tx.user.update({ where: { id }, data: { deactivatedAt: new Date() } })
     )
 
     const { password: _pw, ...sanitized } = user
     return NextResponse.json(sanitized, { status: 200 })
   } catch (error) {
-    console.error("POST /api/admin/users/[id]/deactivate error:", error)
+    console.error("POST /api/admin/users/deactivate error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

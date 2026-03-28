@@ -47,7 +47,7 @@ async function verifyDayBelongsToBatch(
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string; dayId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -60,13 +60,14 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const dayCheck = await verifyDayBelongsToBatch(params.dayId, params.id, session.user.id, activeRole)
+  const { id, dayId } = await params
+  const dayCheck = await verifyDayBelongsToBatch(dayId, id, session.user.id, activeRole)
   if (!dayCheck.ok) {
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
   const entries = await prisma.employeeDay.findMany({
-    where: { dayId: params.dayId },
+    where: { dayId },
     include: {
       employee: { select: { id: true, name: true } },
       batchStrain: { include: { strain: { select: { id: true, name: true } } } },
@@ -79,7 +80,7 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string; dayId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -103,14 +104,15 @@ export async function POST(
 
   const { employeeId, batchStrainId, amount, hours } = parsed.data
 
-  const dayCheck = await verifyDayBelongsToBatch(params.dayId, params.id, session.user.id, activeRole)
+  const { id, dayId } = await params
+  const dayCheck = await verifyDayBelongsToBatch(dayId, id, session.user.id, activeRole)
   if (!dayCheck.ok) {
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
   // Verify batchStrainId belongs to the batch
   const batchStrain = await prisma.batchStrain.findFirst({
-    where: { id: batchStrainId, batchId: params.id },
+    where: { id: batchStrainId, batchId: id },
   })
   if (!batchStrain) {
     return NextResponse.json(
@@ -122,7 +124,7 @@ export async function POST(
   const entry = await prisma.employeeDay.create({
     data: {
       employeeId,
-      dayId: params.dayId,
+      dayId,
       batchStrainId,
       amount,
       hours,

@@ -54,7 +54,7 @@ async function verifyEntryOwnership(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string; dayId: string; entryId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string; entryId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -76,10 +76,11 @@ export async function PATCH(
     )
   }
 
+  const { id, dayId, entryId } = await params
   const owned = await verifyEntryOwnership(
-    params.entryId,
-    params.dayId,
-    params.id,
+    entryId,
+    dayId,
+    id,
     session.user.id,
     activeRole
   )
@@ -88,7 +89,7 @@ export async function PATCH(
   }
 
   const updated = await prisma.employeeDay.update({
-    where: { id: params.entryId },
+    where: { id: entryId },
     data: {
       ...(parsed.data.amount !== undefined && { amount: parsed.data.amount }),
       ...(parsed.data.hours !== undefined && { hours: parsed.data.hours }),
@@ -103,7 +104,7 @@ export async function PATCH(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string; dayId: string; entryId: string } }
+  { params }: { params: Promise<{ id: string; dayId: string; entryId: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -116,10 +117,11 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  const { id, dayId, entryId } = await params
   const owned = await verifyEntryOwnership(
-    params.entryId,
-    params.dayId,
-    params.id,
+    entryId,
+    dayId,
+    id,
     session.user.id,
     activeRole
   )
@@ -127,7 +129,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Entry not found" }, { status: 404 })
   }
 
-  await prisma.employeeDay.delete({ where: { id: params.entryId } })
+  await prisma.employeeDay.delete({ where: { id: entryId } })
 
   return NextResponse.json({ success: true })
 }

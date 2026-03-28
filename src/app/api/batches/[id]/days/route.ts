@@ -19,7 +19,7 @@ async function getManagerLocation(userId: string): Promise<string | null> {
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -32,7 +32,8 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+  const { id } = await params
+  const batch = await prisma.batch.findUnique({ where: { id } })
   if (!batch) {
     return NextResponse.json({ error: "Batch not found" }, { status: 404 })
   }
@@ -45,7 +46,7 @@ export async function GET(
   }
 
   const days = await prisma.day.findMany({
-    where: { batchId: params.id },
+    where: { batchId: id },
     orderBy: { batchDay: "asc" },
     include: {
       _count: { select: { employeeDays: true } },
@@ -57,7 +58,7 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session?.user) {
@@ -70,7 +71,8 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const batch = await prisma.batch.findUnique({ where: { id: params.id } })
+  const { id } = await params
+  const batch = await prisma.batch.findUnique({ where: { id } })
   if (!batch) {
     return NextResponse.json({ error: "Batch not found" }, { status: 404 })
   }
@@ -91,7 +93,7 @@ export async function POST(
 
   // Auto-increment batchDay within this batch
   const lastDay = await prisma.day.findFirst({
-    where: { batchId: params.id },
+    where: { batchId: id },
     orderBy: { batchDay: "desc" },
     select: { batchDay: true },
   })
@@ -108,7 +110,7 @@ export async function POST(
 
   const day = await prisma.day.create({
     data: {
-      batchId: params.id,
+      batchId: id,
       batchDay: nextDay,
       notes: parsed.data.notes,
     },

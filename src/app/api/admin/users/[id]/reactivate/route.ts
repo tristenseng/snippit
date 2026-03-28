@@ -7,7 +7,7 @@ import type { Role } from "@prisma/client"
 
 export async function POST(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -21,8 +21,9 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const { id } = await params
     const user = await withUser(session.user.id, (tx) =>
-      tx.user.update({ where: { id: params.id }, data: { deactivatedAt: null } })
+      tx.user.update({ where: { id }, data: { deactivatedAt: null } })
     )
 
     const { password: _pw, ...sanitized } = user
