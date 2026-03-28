@@ -121,7 +121,7 @@ These components are used in Phase 4. Each entry notes whether it is new or reus
 
 Three sections stacked vertically with `space-y-6` between them:
 
-1. **Recent Batch Section** — heading `text-lg font-bold text-stone-900 mb-3`, followed by a list of `StrainBreakdownRow` components.
+1. **Recent Batch Section** — heading `text-xs font-bold text-stone-400 uppercase tracking-wider mb-3`, followed by a list of `StrainBreakdownRow` components.
 2. **Batch History Cards** — heading same style, followed by `grid grid-cols-1 sm:grid-cols-2 gap-4` of batch summary cards.
 3. **Strain Totals Section** — heading same style, followed by a simple list of `strain name: Ng total across all batches`.
 
@@ -142,7 +142,7 @@ Each batch card follows the `BatchCard.tsx` pattern exactly:
 - `bg-white rounded-xl border border-stone-200 p-4 flex flex-col gap-3`
 - No hover link needed (read-only, no navigation action within this phase).
 - Content:
-  - `text-base font-bold text-stone-900` — "Batch #N"
+  - `text-sm font-bold text-stone-900` — "Batch #N"
   - `text-sm text-stone-500` — date range (e.g., `Mar 1 – Mar 15`)
   - `text-sm font-bold text-stone-900 tabular-nums` — total grams (e.g., `4,820g total`)
 
@@ -193,7 +193,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 1: Recent Batch days -->
   <section>
-    <h3 class="text-lg font-bold text-stone-900 mb-3">Recent Batch</h3>
+    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Recent Batch</h3>
     <div class="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100">
       <!-- StrainBreakdownRow × N days -->
     </div>
@@ -201,7 +201,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 2: Batch history cards -->
   <section>
-    <h3 class="text-lg font-bold text-stone-900 mb-3">Batch History</h3>
+    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Batch History</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- Batch summary card × N batches (excluding most recent) -->
     </div>
@@ -209,7 +209,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Section 3: Strain totals -->
   <section>
-    <h3 class="text-lg font-bold text-stone-900 mb-3">Strain Totals</h3>
+    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Strain Totals</h3>
     <div class="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100 px-4">
       <!-- Strain row × N strains -->
     </div>
