@@ -1,8 +1,8 @@
 # Project Roadmap
 
-**Project**: Cannabis Employee Performance & Commission Tracker  
-**Version**: v1.0 Core Performance Visibility  
-**Created**: 2026-03-20  
+**Project**: Cannabis Employee Performance & Commission Tracker
+**Version**: v1.0 Core Performance Visibility
+**Created**: 2026-03-20
 **Requirements Coverage**: 14/14 v1 requirements mapped (100%)
 
 ## Overview
@@ -31,7 +31,7 @@ This roadmap delivers the foundational cannabis employee performance tracking sy
 **Requirements**:
 - AUTH-01: User can create account with email/password
 - AUTH-02: User can log in and stay logged in across sessions
-- AUTH-03: User can log out from any page  
+- AUTH-03: User can log out from any page
 - AUTH-04: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
 - UX-01: Mobile-responsive design optimized for phone usage
 - UX-02: Employees cannot view other employees' performance data (privacy)
@@ -64,7 +64,7 @@ Plans:
 
 **Requirements**:
 - DATA-01: Manager can create batches with strain specification
-- DATA-02: Manager can create daily entries within batches  
+- DATA-02: Manager can create daily entries within batches
 - DATA-03: Manager can input employee weights with autocomplete search functionality
 - DATA-04: Manager can submit completed days to notify employees of new data
 - ADMIN-01: Admin can add, edit, and delete employee accounts
@@ -125,15 +125,21 @@ Plans:
 1. Employee sees today's gram production immediately upon login
 2. Employee can view performance history by day within current and past batches
 3. Performance data shows strain context for meaningful comparisons
-4. Historical trends display clearly on mobile with simple charts
+4. Historical trends display clearly on mobile with lists and cards
 5. Employee can navigate between different batches to see progression
 
 **Technical Implementation**:
 - Employee dashboard with performance data queries
-- Charts optimized for mobile viewing (Recharts library)
+- Lists and cards (no charting library) optimized for mobile viewing
 - Strain-aware performance filtering and comparison
 - Historical data aggregation and trend calculation
 - Mobile-optimized data visualization components
+
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Performance data helpers + dashboard production card with real data
+- [ ] 04-02-PLAN.md — /performance page with batch history, strain breakdown, and loading skeleton
 
 ### Phase 5: Commission & Analytics
 **Goal**: Deliver transparent commission calculations and team analytics while maintaining individual privacy.
