@@ -16,7 +16,7 @@ This roadmap delivers the foundational cannabis employee performance tracking sy
 | 1 | Secure Foundation | Complete | AUTH-01..04, UX-01..02 | None |
 | 2 | Data Management Core | Complete | DATA-01..04, ADMIN-01 | Phase 1 |
 | 3 | 1/1 | Complete   | 2026-03-27 | Phase 2 |
-| 4 | Performance Visibility | 2 weeks | PERF-01, PERF-02 | Phase 3 |
+| 4 | 1/2 | In Progress|  | Phase 3 |
 | 5 | Commission & Analytics | 2-3 weeks | PERF-03, ADMIN-02 | Phase 4 |
 
 **Total estimated duration:** 8-11 weeks
@@ -135,7 +135,7 @@ Plans:
 - Historical data aggregation and trend calculation
 - Mobile-optimized data visualization components
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 04-01-PLAN.md — Performance data helpers + dashboard production card with real data

@@ -9,7 +9,7 @@
 - [x] **AUTH-04**: Role-based access control with Employee/Manager/Admin roles and appropriate overlaps
 
 ### Performance Tracking  
-- [ ] **PERF-01**: Employee can view their daily gram production with strain context
+- [x] **PERF-01**: Employee can view their daily gram production with strain context
 - [ ] **PERF-02**: Employee can see historical performance trends (day-to-day, batch-to-batch)
 - [ ] **PERF-03**: Employee can view projected commission earnings based on batch performance
 
