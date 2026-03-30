@@ -99,6 +99,12 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 
 (none)
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260330-dz7 | Day creation workflow - show editable day number before submit | 2026-03-30 | 175f948 | [260330-dz7-day-creation-workflow-day-1-vs-next-day-](./quick/260330-dz7-day-creation-workflow-day-1-vs-next-day-/) |
+
 ## Last Session
 
 **Stopped at:** Completed quick-260330-dz7 (day creation workflow disambiguation)
