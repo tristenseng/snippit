@@ -93,6 +93,10 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 | Phase 04-performance-visibility P01 | 6min | 2 tasks | 13 files |
 | Phase 04-performance-visibility P02 | 12min | 2 tasks | 3 files |
 
+### Pending Todos
+
+- **Discuss day creation workflow - day 1 vs next day** (ui) — UX ambiguity when creating a day: restart Day 1 vs. continue sequential numbering
+
 ## Last Session
 
 **Stopped at:** Completed 04-02-PLAN.md
