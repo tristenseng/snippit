@@ -73,6 +73,8 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 - [Phase 04-performance-visibility]: formatCalendarDate uses timeZone: UTC to prevent DST shifts in batchDay date arithmetic
 - [Phase 04-performance-visibility]: StrainBreakdownRow uses simple conditional render (no CSS height animation) — matching WeightEntryRow precedent
 - [Phase 04-performance-visibility]: Batch History section conditionally rendered only when olderBatches.length > 0 — no empty state needed for single-batch employees
+- [quick-260330-dz7]: dayNumber updated via useEffect (not useMemo) so manager can independently edit the value after strain selection changes it
+- [quick-260330-dz7]: Reuse InlineAlert for 409 conflict display — no separate client-side duplicate check needed
 
 ### Performance Metrics
 
@@ -95,9 +97,9 @@ See: .planning/PROJECT.md (updated 2025-03-20)
 
 ### Pending Todos
 
-- **Discuss day creation workflow - day 1 vs next day** (ui) — UX ambiguity when creating a day: restart Day 1 vs. continue sequential numbering
+(none)
 
 ## Last Session
 
-**Stopped at:** Completed 04-02-PLAN.md
-**Timestamp:** 2026-03-24T07:13:00Z
+**Stopped at:** Completed quick-260330-dz7 (day creation workflow disambiguation)
+**Timestamp:** 2026-03-30T17:17:43Z
