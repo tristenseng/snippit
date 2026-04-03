@@ -28,7 +28,8 @@ interface DayListProps {
 
 function computeNextDay(days: DayItem[], strainId: string): number {
   const strainDays = days.filter(d => d.batchStrainId === strainId)
-  if (strainDays.length === 0) return 1
+  const maxBatchDay = days.length > 0 ? Math.max(...days.map(d => d.batchDay)) : 0
+  if (strainDays.length === 0) return maxBatchDay === 0 ? 1 : maxBatchDay
   return Math.max(...strainDays.map(d => d.batchDay)) + 1
 }
 
