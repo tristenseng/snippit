@@ -23,6 +23,14 @@ created: 2026-03-28
 | Icon library | inline SVG (established pattern in WeightEntryRow, MobileNav) |
 | Font | Outfit (Google Fonts via next/font, variable `--font-outfit`) |
 
+Design taste calibration for this phase (data-dense mobile utility dashboard):
+
+| Dial | Value | Rationale |
+|------|-------|-----------|
+| DESIGN_VARIANCE | 6 | Offset asymmetry — left-aligned headings, data-driven card sizing. Not purely symmetric but no masonry chaos for a utility page |
+| MOTION_INTENSITY | 4 | Fluid CSS only — `transition` on hovers and chevron rotation. No Framer Motion; no perpetual loops |
+| VISUAL_DENSITY | 5 | Daily App mode — comfortable reading density, not cockpit-packed |
+
 Source: `tailwind.config.js`, `src/app/layout.tsx`, `src/app/globals.css`
 
 ---
@@ -49,12 +57,12 @@ Exceptions:
 
 ## Typography
 
-| Role | Size | Weight | Line Height |
-|------|------|--------|-------------|
-| Body | 14px (`text-sm`) | 400 regular | 1.5 |
-| Label / Caption | 12px (`text-xs`) | 700 bold | 1.4 |
-| Heading | 24px (`text-2xl`) | 700 bold | 1.2 |
-| Display / Metric | 30px (`text-3xl`) | 700 bold | 1.1 (tabular-nums) |
+| Role | Size | Weight | Tracking | Line Height |
+|------|------|--------|----------|-------------|
+| Body | 14px (`text-sm`) | 400 regular | default | 1.5 |
+| Label / Caption | 12px (`text-xs`) | 700 bold | `tracking-wider uppercase` | 1.4 |
+| Heading | 24px (`text-2xl`) | 700 bold | `tracking-tighter` | 1.2 |
+| Display / Metric | 30px (`text-3xl`) | 700 bold | default | 1.1 (tabular-nums) |
 
 Notes:
 - `text-xs font-bold uppercase tracking-wider` is the card label pattern (e.g., "TODAY'S PRODUCTION"). Use this exactly for section labels on the `/performance` page. The uppercase and letter-spacing provide sufficient visual distinction at 12px without needing a separate weight tier.
@@ -111,6 +119,7 @@ These components are used in Phase 4. Each entry notes whether it is new or reus
 
 - The card (`bg-white rounded-xl border border-stone-200 p-5`) becomes a `<Link href="/performance">` wrapper.
 - On hover: `hover:border-stone-300 hover:shadow-sm transition-all duration-200` — matches `BatchCard.tsx` hover pattern.
+- On active (tap/click): `active:scale-[0.98] active:shadow-none` — tactile push feedback. Combine with `transition-all duration-150` so the snap-back is snappy.
 - Card content:
   - Line 1: `text-xs font-bold text-stone-400 uppercase tracking-wider` — label "TODAY'S PRODUCTION"
   - Line 2: `text-3xl font-bold text-stone-900 mt-2 tabular-nums` — total grams value (e.g., `842g`)
@@ -129,8 +138,9 @@ Three sections stacked vertically with `space-y-6` between them:
 
 - The row is a full-width `<button>` with `w-full text-left` for tap affordance.
 - Collapsed state shows: `{totalGrams}g` (bold, `text-stone-900`) + `{dateLabel} · Day {dayNumber}` (muted, `text-stone-500`), arranged with `flex items-center justify-between`.
-- An expand indicator: chevron icon (inline SVG, `h-4 w-4 text-stone-400`) rotates 180° when expanded using `transition-transform duration-200`.
+- An expand indicator: chevron icon (inline SVG, `h-4 w-4 text-stone-400`) rotates 180° when expanded using `transition-transform duration-200 will-change-transform`. Use `transform` only — no `top`/`height` animation.
 - Touch target: `min-h-[44px]` on the button. Source: established `touch` token in `tailwind.config.js`.
+- On active (tap): `active:bg-stone-50` — subtle background shift as tactile feedback. Apply `transition-colors duration-150`.
 - Expanded state reveals a `<div className="pl-4 pt-2 pb-3 space-y-1">` with per-strain entries:
   - Each entry: `text-sm text-stone-600` — `{Strain Name}: {amount}g`
 - Animation: `overflow-hidden` + conditional render (no CSS transition animation — matches WeightEntryRow precedent of simple show/hide). Source: CONTEXT.md "Claude's Discretion" — simple show/hide, no library.
@@ -188,7 +198,7 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
   <!-- Page heading -->
   <div class="border-b border-stone-200 pb-4">
-    <h2 class="text-2xl font-bold tracking-tight text-stone-900">My Performance</h2>
+    <h2 class="text-2xl font-bold tracking-tighter text-stone-900">My Performance</h2>
   </div>
 
   <!-- Section 1: Recent Batch days -->
@@ -217,6 +227,38 @@ Date format: `Date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }
 
 </main>
 ```
+
+---
+
+## Loading & Empty States
+
+### Performance Page Skeleton (`loading.tsx`)
+
+The `/performance` route is a server component that fetches data. Provide a `loading.tsx` sibling that renders a skeletal placeholder matching the exact layout dimensions — no generic spinners.
+
+Skeleton rules:
+- Use `animate-pulse` on `bg-stone-200 rounded` placeholder blocks.
+- Match the **exact dimensions** of each real element so the layout does not shift on hydration.
+- Heading placeholder: `h-7 w-36 bg-stone-200 rounded` (matches `text-2xl` heading height + typical label width).
+- Section label placeholder: `h-3 w-24 bg-stone-200 rounded` (matches `text-xs` label).
+- `StrainBreakdownRow` placeholder: `h-[44px] w-full bg-stone-200 rounded` per row — render 4 rows.
+- Batch history card placeholder: `h-24 bg-stone-200 rounded-xl` in `grid-cols-1 sm:grid-cols-2 gap-4` — render 2 cards.
+- Strain totals placeholder: `h-[40px] w-full bg-stone-200 rounded` — render 3 rows.
+- Full skeleton wrapper: same `<main class="space-y-6">` structure as the real page so the layout shift is zero.
+
+### Empty State
+
+Already specified in Copywriting Contract. Visual treatment:
+- Centered within the page area: `flex flex-col items-center justify-center py-16 text-center`.
+- Heading: `text-sm font-bold text-stone-900`.
+- Body: `text-sm text-stone-500 mt-1 max-w-[280px]`.
+- No illustration — plain text is sufficient for this utility context.
+
+### Error State
+
+Already specified in Copywriting Contract. Visual treatment:
+- Inline within `<main>`, same `space-y-6` wrapper: `p-4 bg-red-50 border border-red-200 rounded-xl`.
+- Text: `text-sm text-red-700`.
 
 ---
 

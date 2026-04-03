@@ -7,6 +7,7 @@ import { ROLE_PERMISSIONS } from "@/lib/rbac"
 
 const createBatchSchema = z.object({
   strainIds: z.array(z.string()).min(1, "At least one strain required"),
+  locationId: z.string().optional(),
 })
 
 export async function GET() {
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { strainIds } = parsed.data
+  const { strainIds, locationId: requestedLocationId } = parsed.data
 
   const manager = await withUser(session.user.id, (tx) =>
     tx.user.findUnique({
@@ -72,7 +73,21 @@ export async function POST(request: Request) {
     })
   )
 
-  const locationId = manager?.locationId ?? manager?.userLocations?.[0]?.locationId ?? null
+  const defaultLocationId =
+    manager?.locationId ?? manager?.userLocations?.[0]?.locationId ?? null
+
+  // Admins may specify a location; all others use their own assigned location
+  let locationId: string | null = defaultLocationId
+  if (activeRole === "ADMIN" && requestedLocationId) {
+    const exists = await prisma.location.findUnique({
+      where: { id: requestedLocationId },
+      select: { id: true },
+    })
+    if (!exists) {
+      return NextResponse.json({ error: "Invalid location" }, { status: 422 })
+    }
+    locationId = requestedLocationId
+  }
 
   if (!locationId) {
     return NextResponse.json({ error: "Manager has no assigned location" }, { status: 422 })

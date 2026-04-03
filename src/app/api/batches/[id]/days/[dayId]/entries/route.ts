@@ -7,7 +7,6 @@ import { ROLE_PERMISSIONS } from "@/lib/rbac"
 
 const createEntrySchema = z.object({
   employeeId: z.string(),
-  batchStrainId: z.string(),
   amount: z.number().positive().max(9999.9),
   hours: z.number().positive().max(999.9).optional(),
 })
@@ -70,7 +69,6 @@ export async function GET(
     where: { dayId },
     include: {
       employee: { select: { id: true, name: true } },
-      batchStrain: { include: { strain: { select: { id: true, name: true } } } },
     },
     orderBy: { employee: { name: "asc" } },
   })
@@ -102,7 +100,7 @@ export async function POST(
     )
   }
 
-  const { employeeId, batchStrainId, amount, hours } = parsed.data
+  const { employeeId, amount, hours } = parsed.data
 
   const { id, dayId } = await params
   const dayCheck = await verifyDayBelongsToBatch(dayId, id, session.user.id, activeRole)
@@ -110,28 +108,15 @@ export async function POST(
     return NextResponse.json({ error: "Day not found" }, { status: 404 })
   }
 
-  // Verify batchStrainId belongs to the batch
-  const batchStrain = await prisma.batchStrain.findFirst({
-    where: { id: batchStrainId, batchId: id },
-  })
-  if (!batchStrain) {
-    return NextResponse.json(
-      { error: "Strain does not belong to this batch" },
-      { status: 400 }
-    )
-  }
-
   const entry = await prisma.employeeDay.create({
     data: {
       employeeId,
       dayId,
-      batchStrainId,
       amount,
       hours,
     },
     include: {
       employee: { select: { id: true, name: true } },
-      batchStrain: { include: { strain: { select: { id: true, name: true } } } },
     },
   })
 

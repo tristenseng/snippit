@@ -11,13 +11,21 @@ interface Strain {
   name: string
 }
 
+interface Location {
+  id: string
+  name: string
+}
+
 export function CreateBatchForm() {
   const router = useRouter()
   const [strains, setStrains] = useState<Strain[]>([])
   const [selectedStrainIds, setSelectedStrainIds] = useState<string[]>([])
+  const [locations, setLocations] = useState<Location[]>([])
+  const [selectedLocationId, setSelectedLocationId] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [strainsLoading, setStrainsLoading] = useState(true)
+  const [locationsLoading, setLocationsLoading] = useState(true)
 
   useEffect(() => {
     async function fetchStrains() {
@@ -33,7 +41,24 @@ export function CreateBatchForm() {
         setStrainsLoading(false)
       }
     }
+
+    async function fetchLocations() {
+      try {
+        const res = await fetch('/api/locations')
+        if (res.ok) {
+          const data: Location[] = await res.json()
+          setLocations(data)
+          if (data.length > 0) setSelectedLocationId(data[0].id)
+        }
+      } catch {
+        // non-blocking
+      } finally {
+        setLocationsLoading(false)
+      }
+    }
+
     fetchStrains()
+    fetchLocations()
   }, [])
 
   function toggleStrain(id: string) {
@@ -56,7 +81,10 @@ export function CreateBatchForm() {
       const res = await fetch('/api/batches', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ strainIds: selectedStrainIds }),
+        body: JSON.stringify({
+          strainIds: selectedStrainIds,
+          locationId: selectedLocationId || undefined,
+        }),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -77,6 +105,29 @@ export function CreateBatchForm() {
       {error && (
         <InlineAlert type="error" message={error} onDismiss={() => setError(null)} />
       )}
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Location
+        </label>
+        {locationsLoading ? (
+          <p className="text-sm text-gray-400">Loading location...</p>
+        ) : locations.length === 0 ? (
+          <p className="text-sm text-red-500">No location assigned. Contact an admin.</p>
+        ) : locations.length === 1 ? (
+          <p className="text-sm text-gray-700 py-2">{locations[0].name}</p>
+        ) : (
+          <select
+            value={selectedLocationId}
+            onChange={e => setSelectedLocationId(e.target.value)}
+            className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            {locations.map(loc => (
+              <option key={loc.id} value={loc.id}>{loc.name}</option>
+            ))}
+          </select>
+        )}
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -110,7 +161,12 @@ export function CreateBatchForm() {
       </div>
 
       <div className="flex justify-end">
-        <ActionButton type="submit" variant="primary" loading={loading} disabled={strains.length === 0}>
+        <ActionButton
+          type="submit"
+          variant="primary"
+          loading={loading}
+          disabled={strains.length === 0 || locations.length === 0}
+        >
           Create Batch
         </ActionButton>
       </div>

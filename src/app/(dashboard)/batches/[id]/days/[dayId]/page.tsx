@@ -35,21 +35,15 @@ export default async function DayDetailPage({ params }: PageProps) {
     select: { locationId: true },
   })
 
-  // Fetch day with entries (batchStrain → strain name)
+  // Fetch day with entries and strain info
   const day = await prisma.day.findUnique({
     where: { id: dayId },
     include: {
-      batch: {
-        include: {
-          batchStrains: {
-            include: { strain: true },
-          },
-        },
-      },
+      batchStrain: { include: { strain: { select: { name: true } } } },
+      batch: { select: { id: true, number: true, locationId: true } },
       employeeDays: {
         include: {
           employee: { select: { id: true, name: true } },
-          batchStrain: { include: { strain: true } },
         },
         orderBy: { id: 'asc' },
       },
@@ -65,8 +59,8 @@ export default async function DayDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  const batch = day.batch
-  const locationId = batch.locationId
+  const strainName = day.batchStrain.strain.name
+  const locationId = day.batch.locationId
 
   return (
     <div className="space-y-6">
@@ -77,15 +71,17 @@ export default async function DayDetailPage({ params }: PageProps) {
         </Link>
         <span className="text-gray-400">/</span>
         <Link href={`/batches/${batchId}`} className="text-blue-600 hover:underline">
-          Batch #{batch.number}
+          Batch #{day.batch.number}
         </Link>
         <span className="text-gray-400">/</span>
-        <span className="text-gray-600">Day {day.batchDay}</span>
+        <span className="text-gray-600">Day {day.batchDay} — {strainName}</span>
       </div>
 
       {/* Page header */}
-      <div className="flex items-center gap-3">
-        <h2 className="text-2xl font-semibold text-gray-900">Day {day.batchDay}</h2>
+      <div className="flex items-center gap-3 flex-wrap">
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Day {day.batchDay} — {strainName}
+        </h2>
         {day.isSubmitted ? (
           <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
             Submitted
@@ -102,13 +98,12 @@ export default async function DayDetailPage({ params }: PageProps) {
         batchId={batchId}
         dayId={dayId}
         batchDay={day.batchDay}
-        batchStrains={batch.batchStrains}
+        strainName={strainName}
         locationId={locationId}
         entries={day.employeeDays.map(ed => ({
           id: ed.id,
           amount: ed.amount,
           hours: ed.hours,
-          batchStrainId: ed.batchStrainId,
           employee: { id: ed.employee.id, name: ed.employee.name },
         }))}
         isSubmitted={day.isSubmitted}

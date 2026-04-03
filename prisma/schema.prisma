@@ -120,39 +120,39 @@ model Batch {
 }
 
 model BatchStrain {
-  id           String        @id @default(cuid())
-  batchId      String
-  strainId     String
-  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  strain       Strain        @relation(fields: [strainId], references: [id])
-  employeeDays EmployeeDay[]
+  id      String @id @default(cuid())
+  batchId String
+  strainId String
+  batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  strain  Strain @relation(fields: [strainId], references: [id])
+  days    Day[]
 
   @@unique([batchId, strainId])
   @@map("batch_strains")
 }
 
 model Day {
-  id           String        @id @default(cuid())
-  batchId      String
-  batchDay     Int
-  isSubmitted  Boolean       @default(false)
-  notes        String?
-  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  employeeDays EmployeeDay[]
+  id            String      @id @default(cuid())
+  batchId       String
+  batchStrainId String
+  batchDay      Int
+  isSubmitted   Boolean     @default(false)
+  notes         String?
+  batch         Batch       @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  batchStrain   BatchStrain @relation(fields: [batchStrainId], references: [id])
+  employeeDays  EmployeeDay[]
 
-  @@unique([batchId, batchDay])
+  @@unique([batchId, batchStrainId, batchDay])
 }
 
 model EmployeeDay {
-  id            String      @id @default(cuid())
-  employeeId    String
-  dayId         String
-  batchStrainId String
-  amount        Float
-  hours         Float?
-  employee      User        @relation(fields: [employeeId], references: [id])
-  day           Day         @relation(fields: [dayId], references: [id], onDelete: Cascade)
-  batchStrain   BatchStrain @relation(fields: [batchStrainId], references: [id])
+  id         String @id @default(cuid())
+  employeeId String
+  dayId      String
+  amount     Float
+  hours      Float?
+  employee   User   @relation(fields: [employeeId], references: [id])
+  day        Day    @relation(fields: [dayId], references: [id], onDelete: Cascade)
 
   @@map("employees_days")
 }

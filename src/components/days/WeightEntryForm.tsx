@@ -1,22 +1,15 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { StrainSelector } from './StrainSelector'
 import { EmployeeAutocomplete } from './EmployeeAutocomplete'
 import { WeightEntryRow } from './WeightEntryRow'
 import { ActionButton } from '@/components/ui/ActionButton'
 import { InlineAlert } from '@/components/ui/InlineAlert'
 
-interface BatchStrainItem {
-  id: string
-  strain: { id: string; name: string }
-}
-
 interface EmployeeDayEntry {
   id: string
   amount: number
   hours: number | null
-  batchStrainId: string
   employee: { id: string; name: string | null }
 }
 
@@ -24,7 +17,7 @@ interface WeightEntryFormProps {
   batchId: string
   dayId: string
   batchDay: number
-  batchStrains: BatchStrainItem[]
+  strainName: string
   locationId: string
   entries: EmployeeDayEntry[]
   isSubmitted: boolean
@@ -34,12 +27,11 @@ export function WeightEntryForm({
   batchId,
   dayId,
   batchDay,
-  batchStrains,
+  strainName,
   locationId,
   entries: initialEntries,
   isSubmitted,
 }: WeightEntryFormProps) {
-  const [selectedBatchStrainId, setSelectedBatchStrainId] = useState<string | null>(null)
   const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; name: string } | null>(null)
   const [grams, setGrams] = useState('')
   const [hours, setHours] = useState('')
@@ -50,8 +42,6 @@ export function WeightEntryForm({
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(isSubmitted)
 
-  const strainOptions = batchStrains.map(bs => ({ id: bs.id, name: bs.strain.name }))
-
   // IDs of employees already added to the current list
   const excludeIds = entries.map(e => e.employee.id)
 
@@ -60,7 +50,7 @@ export function WeightEntryForm({
   }, [])
 
   async function handleAddEntry() {
-    if (!selectedBatchStrainId || !selectedEmployee || !grams || parseFloat(grams) <= 0) return
+    if (!selectedEmployee || !grams || parseFloat(grams) <= 0) return
     setAdding(true)
     setError(null)
     try {
@@ -69,7 +59,6 @@ export function WeightEntryForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           employeeId: selectedEmployee.id,
-          batchStrainId: selectedBatchStrainId,
           amount: parseFloat(grams),
           ...(hours ? { hours: parseFloat(hours) } : {}),
         }),
@@ -81,7 +70,6 @@ export function WeightEntryForm({
       }
       const newEntry: EmployeeDayEntry = await res.json()
       setEntries(prev => [...prev, newEntry])
-      // Reset employee + grams/hours; keep strain selected for next employee
       setSelectedEmployee(null)
       setGrams('')
       setHours('')
@@ -114,8 +102,7 @@ export function WeightEntryForm({
   }
 
   const gramsFloat = parseFloat(grams)
-  const canAddEntry =
-    !!selectedBatchStrainId && !!selectedEmployee && !isNaN(gramsFloat) && gramsFloat > 0
+  const canAddEntry = !!selectedEmployee && !isNaN(gramsFloat) && gramsFloat > 0
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -127,13 +114,6 @@ export function WeightEntryForm({
       {!submitted && (
         <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
           <h3 className="text-base font-semibold text-gray-900">Add Weight Entry</h3>
-
-          {/* Strain selector */}
-          <StrainSelector
-            strains={strainOptions}
-            selectedStrainId={selectedBatchStrainId}
-            onChange={setSelectedBatchStrainId}
-          />
 
           {/* Employee autocomplete */}
           <div className="space-y-1">
@@ -159,7 +139,6 @@ export function WeightEntryForm({
                 locationId={locationId}
                 excludeIds={excludeIds}
                 onSelect={handleEmployeeSelect}
-                disabled={!selectedBatchStrainId}
               />
             )}
           </div>
@@ -214,7 +193,7 @@ export function WeightEntryForm({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-semibold text-gray-900">
-            Entries for Day {batchDay}
+            Entries for Day {batchDay} — {strainName}
           </h3>
 
           {/* Submit Day button */}
@@ -259,7 +238,7 @@ export function WeightEntryForm({
           <div className="text-center py-10 bg-gray-50 rounded-lg border border-gray-200">
             <p className="text-base font-semibold text-gray-700">No entries for Day {batchDay}</p>
             <p className="text-sm text-gray-500 mt-1">
-              Select a strain and search for an employee to add the first weight entry.
+              Search for an employee to add the first weight entry.
             </p>
           </div>
         ) : (
@@ -272,10 +251,8 @@ export function WeightEntryForm({
                   dayId={dayId}
                   onUpdated={(updatedEntry) => {
                     if (updatedEntry === null) {
-                      // Entry was deleted — remove from list
                       setEntries(prev => prev.filter(e => e.id !== entry.id))
                     } else {
-                      // Entry was edited — update in place
                       setEntries(prev => prev.map(e => e.id === entry.id ? updatedEntry : e))
                     }
                   }}

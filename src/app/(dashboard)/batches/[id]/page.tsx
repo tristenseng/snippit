@@ -47,8 +47,12 @@ export default async function BatchDetailPage({ params }: PageProps) {
       days: {
         include: {
           _count: { select: { employeeDays: true } },
+          batchStrain: { include: { strain: { select: { name: true } } } },
         },
-        orderBy: { batchDay: 'asc' },
+        orderBy: [
+          { batchStrain: { strain: { name: 'asc' } } },
+          { batchDay: 'asc' },
+        ],
       },
     },
   })
@@ -112,6 +116,7 @@ export default async function BatchDetailPage({ params }: PageProps) {
           days={batch.days}
           batchId={batch.id}
           batchStatus={batch.status}
+          batchStrains={batch.batchStrains}
         />
       </div>
     </div>

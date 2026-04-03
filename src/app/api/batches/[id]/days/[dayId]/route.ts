@@ -105,3 +105,40 @@ export async function PATCH(
 
   return NextResponse.json(updated)
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string; dayId: string }> }
+) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activeRole = (session.user as any).activeRole ?? session.user.role
+  if (!ROLE_PERMISSIONS[activeRole as keyof typeof ROLE_PERMISSIONS]?.canManageBatches) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  }
+
+  const { id, dayId } = await params
+  const day = await prisma.day.findUnique({ where: { id: dayId } })
+  if (!day || day.batchId !== id) {
+    return NextResponse.json({ error: "Day not found" }, { status: 404 })
+  }
+
+  if (day.isSubmitted) {
+    return NextResponse.json({ error: "Cannot delete a submitted day" }, { status: 409 })
+  }
+
+  if (activeRole !== "ADMIN") {
+    const batch = await prisma.batch.findUnique({ where: { id } })
+    const locationId = await getManagerLocation(session.user.id)
+    if (!batch || batch.locationId !== locationId) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
+    }
+  }
+
+  await prisma.day.delete({ where: { id: dayId } })
+  return new NextResponse(null, { status: 204 })
+}

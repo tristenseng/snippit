@@ -7,7 +7,6 @@ interface EmployeeDayEntry {
   id: string
   amount: number
   hours: number | null
-  batchStrainId: string
   employee: { id: string; name: string | null }
 }
 
@@ -15,7 +14,7 @@ interface WeightEntryRowProps {
   entry: EmployeeDayEntry
   batchId: string
   dayId: string
-  onUpdated: (updatedEntry: EmployeeDayEntry | null) => void
+  onUpdated: (entry: EmployeeDayEntry | null) => void
 }
 
 export function WeightEntryRow({ entry, batchId, dayId, onUpdated }: WeightEntryRowProps) {
